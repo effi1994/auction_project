@@ -13,6 +13,7 @@ import {getStatist} from "../services/StatistsService";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HomeTable from "../pages/HomeTable";
+import Product from "../pages/Product";
 
 const AppContainer = () => {
 
@@ -60,6 +61,7 @@ const AppContainer = () => {
                     <Route path={"/league-table-live"} element={<LeagueTableLive/>}/>
                     <Route path={"/login"} element={<Login token={token} onToken={handleToken}/>}/>
                     <Route path={"/signup"} element={<SignUP token={token} onToken={handleToken}/>}/>
+                    <Route path={"/products/:id"} element={<Product/>}/>
                 </Routes>
             </Container>
         </>
