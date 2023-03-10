@@ -38,8 +38,8 @@ export const logout = () => {
     user = null;
 }
 
-export const getUser = (token) => {
-    sendApiPostRequest(urlApi + "/get-user-by-token", {token}, (response) => {
+export const getUser = (token,callback) => {
+    sendApiPostRequest(urlApi + "/get-user", {token}, (response) => {
         if (response.data.success) {
             user=response.data.user;
             callback(user);
