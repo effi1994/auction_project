@@ -6,11 +6,12 @@ export let urlApi= config.apiUrl;
 
 export let statist={};
 
-export const getStatist= () => {
+export const getStatist= (callback) => {
     sendApiGetRequest(urlApi + "/statist", (response) => {
         if (response.data.success) {
-            statist = response.data.statistics;
-            console.log(statist);
+            callback(response.data.statistics);
+            //statist = response.data.statistics;
+           // console.log(statist);
         }else {
             statist = null;
         }

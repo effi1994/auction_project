@@ -1,24 +1,30 @@
-import { sendApiPostRequest} from "./ApiRequests";
-import { Cookies } from 'react-cookie';
-import {toast } from 'react-toastify';
+import {sendApiGetRequest, sendApiPostRequest} from "./ApiRequests";
+import {Cookies} from 'react-cookie';
+import {toast} from 'react-toastify';
 import config from "../config.json";
-let urlApi= config.apiUrl;
-let user=null;
+import {errorMessage} from "./ErrorMessageService";
+
+let urlApi = config.apiUrl;
+let user = null;
 const cookies = new Cookies();
 
 
-export const login = (username, password,callback) => {
-    sendApiPostRequest(urlApi + "/log-in", {
+
+export const login = (username, password, callback) => {
+    sendApiPostRequest(urlApi + "/login", {
         username,
         password
     }, (response) => {
         if (response.data.success) {
-            user = response.data.userObject;
-            cookies.set(config.tokenKey, user.token, { path: '/', expires: new Date(Date.now() + 1000*60*60*24) });
-            callback(user.token);
-        }else {
-         user = null;
-        toast.error("username or password incorrect");
+            //user = response.data.userObject;
+            toast.success("login successfully");
+            callback("/");
+
+            cookies.set(config.tokenKey, response.data.token, {path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24)});
+            //callback(user.token);
+        } else {
+            let errorCode = response.data.errorCode;
+            errorMessage(errorCode);
         }
     })
 }
@@ -35,10 +41,31 @@ export const logout = () => {
 export const getUser = (token) => {
     sendApiPostRequest(urlApi + "/get-user-by-token", {token}, (response) => {
         if (response.data.success) {
-            user = response.data.userObject;
-        }else {
-            user = null;
+            user=response.data.user;
+            callback(user);
+        } else {
+            let errorCode = response.data.errorCode;
+            errorMessage(errorCode);
         }
     })
-    return user;
 }
+
+export const signUp = (username, password, callback) => {
+    sendApiPostRequest(urlApi + "/sign-up", {
+        username,
+        password
+    }, (response) => {
+        if (response.data.success) {
+
+            toast.success("Sign up successfully");
+
+            callback("/login");
+
+
+        } else {
+            let errorCode = response.data.errorCode;
+            errorMessage(errorCode);
+
+        }
+    })
+};

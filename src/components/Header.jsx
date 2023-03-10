@@ -6,15 +6,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import {buttonSX} from "./Styled/ConstantsStyle";
 
 const links = [
-    {titlePage: "Live results", path: "/"},
-    {titlePage: "League table", path: "/league-table"},
-    {titlePage: "League table live", path: "/league-table-live"},
-    {titlePage: "Login", path: "/login"},
+    {titlePage: "Home", path: "/"},
+    {titlePage: "My Products", path: "/league-table"},
+    {titlePage: "My Bids", path: "/league-table-live"},
+
 
 ]
 
 const Header = (props) => {
-    links[3].titlePage= props.token  || getToken() ? "Add/Edit games" : "Login";
+    //links[3].titlePage=  getToken() ? "Add/Edit games" : "Login";
 
 
     const navigate = useNavigate();
@@ -42,7 +42,7 @@ const Header = (props) => {
                                 </Button>
                             ))}
                             {
-                                props.token !=null && getToken() !==undefined   &&
+                                 getToken() !==undefined   &&
                                 <Button
                                     endIcon={<LogoutIcon/>}
                                     onClick={handleLogout}

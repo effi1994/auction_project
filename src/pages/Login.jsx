@@ -2,27 +2,40 @@ import React from 'react';
 import LoginForm from "../components/LoginForm";
 import AddEditGamesPage from "./AddEditGamesPage";
 import {getToken} from "../services/userAtuhService";
-import {getStatist,statist,urlApi} from "../services/StatistsService";
+import {getStatist,urlApi} from "../services/StatistsService";
 import {useState,useEffect} from "react";
+import {Cookies} from 'react-cookie';
+import {useNavigate} from "react-router-dom";
+import  config  from "../config.json";
+//import './css/statistics.css';
 
 const Login = (props) => {
     const [statists, setStatist] = useState({})
+    const navigate = useNavigate();
+
+
+
 
     useEffect(() => {
-        getStatist()
+      const cookies = new Cookies();
+      const token = cookies.get(config.tokenKey);
+        if (token){
+            navigate('/');
+
+        }else {
+            getStatist(setStatist)
+
+        }
+
+
+
     },[])
-
-    useEffect(() => {
-        setStatist(statist)
-    },[statist])
 
     useEffect(() => {
         const eventSource = new EventSource(urlApi+"/sse-statist");
         eventSource.onmessage = event => {
-            console.log(event.data)
             const newStats = JSON.parse(event.data);
             setStatist(newStats.statistics);
-            console.log(newStats)
         };
         return () => {
             eventSource.close();
@@ -32,19 +45,36 @@ const Login = (props) => {
 
 
     return (
-        <div>
-            {
-                props.token || getToken() ? <AddEditGamesPage/> : <LoginForm onToken={props.onToken}/>
-            }
 
-            <div>
-                <h1>LOGIN</h1>
-                <p>Number of users:{statists.numUsers} </p>
-                <p>Number of open tenders:{statists.numOpenTenders} </p>
-                <p>Number of closed tenders:{statists.numClosedTenders} </p>
-                <p>Number of open bids:{statists.numOpenBids} </p>
-                <p>Number of closed bids:{statists.numClosedBids} </p>
-            </div>
+
+
+        <div>
+
+                 <LoginForm onToken={props.onToken}/>
+            <form>
+                <h1>System Statistics</h1>
+                <p>
+                    <label>Number of users:</label>
+                    <span>{statists.numUsers}</span>
+                </p>
+                <p>
+                    <label>Number of open tenders:</label>
+                    <span>{statists.numOpenTenders}</span>
+                </p>
+                <p>
+                    <label>Number of closed tenders:</label>
+                    <span>{statists.numClosedTenders}</span>
+                </p>
+                <p>
+                    <label>Number of open bids:</label>
+                    <span>{statists.numOpenBids}</span>
+                </p>
+                <p>
+                    <label>Number of closed bids:</label>
+                    <span>{statists.numClosedBids}</span>
+                </p>
+            </form>
+
 
 
         </div>
