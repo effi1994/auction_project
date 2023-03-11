@@ -5,7 +5,7 @@ import config from "../config.json";
 import {errorMessage} from "./ErrorMessageService";
 
 let urlApi = config.apiUrl;
-let user = null;
+ export let user = null;
 const cookies = new Cookies();
 
 
@@ -69,3 +69,19 @@ export const signUp = (username, password, callback) => {
         }
     })
 };
+
+export const getCredits = (token,callback) => {
+
+    if (token === undefined) {
+        return;
+    }
+
+    sendApiPostRequest(urlApi + "/get-credit", {token}, (response) => {
+        if (response.data.success) {
+            callback(response.data.creditManagement.creditAmount);
+        } else {
+            let errorCode = response.data.errorCode;
+            errorMessage(errorCode);
+        }
+    })
+}

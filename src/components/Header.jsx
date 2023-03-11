@@ -1,7 +1,7 @@
 import React from 'react';
-import {AppBar, Box, Button, List, Toolbar} from "@mui/material";
-import {NavLink, useNavigate,Link} from "react-router-dom";
-import {getToken,logout} from "../services/userAtuhService";
+import {AppBar, Box, Button, List, Toolbar,Typography } from "@mui/material";
+import {NavLink, useNavigate, Link} from "react-router-dom";
+import {getToken, logout} from "../services/userAtuhService";
 import LogoutIcon from '@mui/icons-material/Logout';
 import {buttonSX} from "./Styled/ConstantsStyle";
 
@@ -15,6 +15,7 @@ const links = [
 
 const Header = (props) => {
     //links[3].titlePage=  getToken() ? "Add/Edit games" : "Login";
+    const credit = props.credit;
 
 
     const navigate = useNavigate();
@@ -31,18 +32,20 @@ const Header = (props) => {
                     <Toolbar>
                         <List sx={{display: "flex", margin: "0 0 0 0", width: "100%"}}>
                             {links.map(({titlePage, path}) => (
-                                <Button  component={NavLink}
-                                         to={path}
-                                         key={path}
-                                         sx={buttonSX}
-                                         color={props.path==path ? "warning" : "inherit"}
-                                         variant="text"
+                                <Button component={NavLink}
+                                        to={path}
+                                        key={path}
+                                        sx={buttonSX}
+                                        color={props.path == path ? "warning" : "inherit"}
+                                        variant="text"
                                 >
                                     {titlePage}
                                 </Button>
                             ))}
+
+
                             {
-                                 getToken() !==undefined   &&
+                                getToken() !== undefined &&
                                 <Button
                                     endIcon={<LogoutIcon/>}
                                     onClick={handleLogout}
@@ -54,14 +57,11 @@ const Header = (props) => {
                             }
 
                         </List>
-                        <span sx={{marginRight:0}}>
-                             <Link to={"/login"}>
-                                 <img src={"/football_ball_jwo7871eemc0.svg"}
-                                      width={25} height={25}
-                                 />
-                             </Link>
 
-                            </span>
+                        <Typography component="span" sx={{flexGrow: 1, textAlign: "right", marginRight: 2, color: "white",verticalAlign:"middle",backgroundColor:"success.light", padding: 1}}>
+                                {"Credit:" + credit + "$"}
+                        </Typography>
+
                     </Toolbar>
                 </AppBar>
             </Box>

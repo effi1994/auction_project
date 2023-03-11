@@ -13,7 +13,7 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, Tooltip, TablePagination
+    TableRow, Tooltip, TablePagination, TextField
 } from "@mui/material";
 import StyledButton from "../components/Styled/StyledButton";
 
@@ -27,6 +27,9 @@ const HomeTable = (props) => {
     const rowsPerPageOptions = [5, 10, 25]; // Options for rows per page dropdown
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState([]);
+
 
     const navigate = useNavigate();
 
@@ -35,22 +38,46 @@ const HomeTable = (props) => {
         const cookies = new Cookies();
         const token = cookies.get(config.tokenKey);
         if (token) {
-            getTable(token, setMainTableModels);
+            getTable(token, setMainTableModels, setFilteredProducts);
+
+
 
             getUser(token, setUser);
-            if (user.admin) {
-                console.log("admin")
-                console.log(user)
-            } else {
-                console.log("not admin")
-            }
+
 
         } else {
             navigate('/login');
         }
 
 
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        const eventSource = new EventSource(config.apiUrl + "/sse-handler-main-table");
+        eventSource.onmessage = event => {
+            const updateTable = JSON.parse(event.data);
+            if (updateTable.statement===1){
+                debugger
+
+                const mainTableModel = [...mainTableModels];
+                mainTableModel.push(updateTable);
+                setMainTableModels(mainTableModel);
+                setFilteredProducts(mainTableModel);
+
+            }else if (updateTable.statement===2) {
+                const mainTableModel = updateTable
+            }else if (updateTable.statement===3) {
+                const mainTableModel = updateTable
+            }
+
+
+        };
+        return () => {
+            eventSource.close();
+        };
+    } , [])
+
+
 
 
     const handleChangePage = (event, newPage) => {
@@ -67,21 +94,47 @@ const HomeTable = (props) => {
         //navigate('/addProduct');
     }
 
+    const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+        const filteredProducts = [...mainTableModels.filter(product => product.name.toLowerCase().includes(event.target.value.toLowerCase()))];
+        setFilteredProducts(filteredProducts);
+    }
+
+
+
+
+
+
+
+
 
     return (
+
         <>
 
-            <StyledButton
-                variant="contained"
+            {
+                !user.admin &&
+                <StyledButton
+                    variant="contained"
+                    sx={{
+                        margin: "10px"
+
+                    }}
+                    text={"Add new product"}
+                    icon={"+"}
+
+                    onClick={addNewProduct}
+                >Add new product</StyledButton>
+
+            }
+
+
+            <TextField
                 sx={{
                     margin: "10px"
-
-            }}
-                text={"Add new product"}
-                icon={"+"}
-
-                onClick={addNewProduct}
-            >Add new product</StyledButton>
+                }}
+                id="outlined-basic" label="Search" variant="outlined" value={searchTerm}
+                onChange={handleSearch}/>
 
 
             <TableContainer>
@@ -92,17 +145,25 @@ const HomeTable = (props) => {
                             <TableCell align="right"></TableCell>
                             <TableCell align="right">Date open</TableCell>
                             <TableCell align="right">General bids</TableCell>
-                            <TableCell align="right">My bids</TableCell>
+                            {
+                                !user.admin &&
+                                <TableCell align="right">My bids</TableCell>
+                            }
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {mainTableModels.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <TableRow key={row.id}>
                                 <TableCell align="right"><Link to={`/products/${row.id}`}>{row.name}</Link></TableCell>
                                 <TableCell align="right">{row.linkImage}</TableCell>
                                 <TableCell align="right">{row.date}</TableCell>
                                 <TableCell align="right">{row.generalBids}</TableCell>
-                                <TableCell align="right">{row.myBids}</TableCell>
+                                {
+                                    !user.admin &&
+                                    <TableCell align="right">{row.myBids}</TableCell>
+                                }
+
                             </TableRow>
                         ))}
                     </TableBody>
@@ -111,7 +172,7 @@ const HomeTable = (props) => {
             <TablePagination
                 rowsPerPageOptions={rowsPerPageOptions}
                 component="div"
-                count={mainTableModels.length}
+                count={filteredProducts.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

@@ -14,24 +14,19 @@ import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HomeTable from "../pages/HomeTable";
 import Product from "../pages/Product";
+import {getTeams} from "../services/teamService";
+import {getEndGames} from "../services/gameService";
+import {calculateTableLeague, tableLeagueEnd} from "../services/CalculationTableService";
 
 const AppContainer = () => {
 
     let location = useLocation();
     const [token, setToken] = useState(null);
-    const [user, setUser] = useState({});
+    const [credit, setCredit] = useState(0);
     useEffect( () => {
        // getLiveGames();
         getStatist();
         if (getToken()){
-
-            setToken(getToken());
-            getUser(getToken(), setUser);
-            if (user.admin){
-                console.log("admin")
-            }else {
-                console.log("not admin")
-            }
 
 
 
