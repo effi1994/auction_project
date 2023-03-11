@@ -7,7 +7,7 @@ import LeagueTableLive from "../pages/LeagueTableLive";
 import Login from "../pages/Login";
 import {Container} from "@mui/material";
 import {useEffect, useState} from "react";
-import {getToken,getUser} from "../services/userAtuhService";
+import {getCredits, getToken, user} from "../services/userAtuhService";
 import SignUP from "../pages/SignUP";
 import {getStatist} from "../services/StatistsService";
 import {ToastContainer} from 'react-toastify';
@@ -27,6 +27,12 @@ const AppContainer = () => {
        // getLiveGames();
         getStatist();
         if (getToken()){
+            const interval = setInterval(() => {
+                let token = getToken();
+                getCredits(token,setCredit);
+                setToken(getToken());
+            }, 1000);
+            return () => clearInterval(interval);
 
 
 
@@ -46,7 +52,7 @@ const AppContainer = () => {
             <ToastContainer/>
             {
                 getToken() &&
-                <Header path={location.pathname} token={token}/>
+                <Header path={location.pathname} token={token} credit={credit}/>
             }
 
             <Container>

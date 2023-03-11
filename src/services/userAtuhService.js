@@ -38,6 +38,8 @@ export const logout = () => {
     user = null;
 }
 
+
+
 export const getUser = (token,callback) => {
     sendApiPostRequest(urlApi + "/get-user", {token}, (response) => {
         if (response.data.success) {
