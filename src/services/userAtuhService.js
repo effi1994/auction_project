@@ -35,6 +35,7 @@ export const getToken = () => {
 
 export const logout = () => {
     cookies.remove(config.tokenKey);
+    cookies.remove(config.tokenKeyAdmin);
     user = null;
 }
 
@@ -44,6 +45,7 @@ export const getUser = (token,callback) => {
     sendApiPostRequest(urlApi + "/get-user", {token}, (response) => {
         if (response.data.success) {
             user=response.data.user;
+            cookies.set(config.tokenKeyAdmin, response.data.user.admin, {path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24)});
             callback(user);
         } else {
             let errorCode = response.data.errorCode;

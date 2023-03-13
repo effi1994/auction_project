@@ -41,7 +41,6 @@ const HomeTable = (props) => {
             getTable(token, setMainTableModels, setFilteredProducts);
 
 
-
             getUser(token, setUser);
 
 
@@ -56,28 +55,62 @@ const HomeTable = (props) => {
         const eventSource = new EventSource(config.apiUrl + "/sse-handler-main-table");
         eventSource.onmessage = event => {
             const updateTable = JSON.parse(event.data);
-            if (updateTable.statement===1){
-                debugger
+            if (updateTable.statement === 1) {
+                setMainTableModels((prevMainTableModel) => {
+                    const newMainTableModel = prevMainTableModel.slice();
+                    newMainTableModel.push(updateTable);
+                    return newMainTableModel;
 
-                const mainTableModel = [...mainTableModels];
-                mainTableModel.push(updateTable);
-                setMainTableModels(mainTableModel);
-                setFilteredProducts(mainTableModel);
+                })
 
-            }else if (updateTable.statement===2) {
-                const mainTableModel = updateTable
-            }else if (updateTable.statement===3) {
-                const mainTableModel = updateTable
+                setFilteredProducts((prevFilteredProducts) => {
+                    const newFilteredProducts = prevFilteredProducts.slice();
+                    newFilteredProducts.push(updateTable);
+                    return newFilteredProducts;
+
+                });
+
+            } else if (updateTable.statement === 2) {
+                setMainTableModels((prevMainTableModel) => {
+                    const newMainTableModel = prevMainTableModel.slice();
+                    const index = newMainTableModel.findIndex((product) => product.id === updateTable.id);
+                    newMainTableModel.splice(index, 1);
+                    return newMainTableModel;
+                })
+
+                setFilteredProducts((prevFilteredProducts) => {
+                    const newFilteredProducts = prevFilteredProducts.slice();
+                    const index = newFilteredProducts.findIndex((product) => product.id === updateTable.id);
+                    newFilteredProducts.splice(index, 1);
+                    return newFilteredProducts;
+                })
+
+            } else if (updateTable.statement === 3) {
+                setMainTableModels((prevMainTableModel) => {
+                    const newMainTableModel = prevMainTableModel.slice();
+                    const index = newMainTableModel.findIndex((product) => product.id === updateTable.id);
+                    if (updateTable.bidUserId !==user.id){
+                        updateTable.myBids =0;
+                    }
+
+                    newMainTableModel[index] = updateTable;
+                    return newMainTableModel;
+                })
+
+                setFilteredProducts((prevFilteredProducts) => {
+                    const newFilteredProducts = prevFilteredProducts.slice();
+                    const index = newFilteredProducts.findIndex((product) => product.id === updateTable.id);
+                    newFilteredProducts[index] = updateTable;
+                    return newFilteredProducts;
+                })
             }
-
-
-        };
+        }
         return () => {
             eventSource.close();
-        };
-    } , [])
+        }
 
 
+    }, []);
 
 
     const handleChangePage = (event, newPage) => {
@@ -100,12 +133,12 @@ const HomeTable = (props) => {
         setFilteredProducts(filteredProducts);
     }
 
+    const handleChangeFilter = (updateTable) => {
+        const filteredProducts = [...mainTableModels];
+        filteredProducts.push(updateTable);
+        setFilteredProducts(filteredProducts);
 
-
-
-
-
-
+    }
 
 
     return (
@@ -155,7 +188,8 @@ const HomeTable = (props) => {
                     <TableBody>
                         {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <TableRow key={row.id}>
-                                <TableCell align="right"><Link to={`/products/${row.id}`}>{row.name}</Link></TableCell>
+                                <TableCell align="right"><Link
+                                    to={`/products/${row.id}`}>{row.name}</Link></TableCell>
                                 <TableCell align="right">{row.linkImage}</TableCell>
                                 <TableCell align="right">{row.date}</TableCell>
                                 <TableCell align="right">{row.generalBids}</TableCell>

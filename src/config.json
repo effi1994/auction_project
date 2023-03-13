@@ -1,4 +1,5 @@
 {
   "apiUrl": "http://localhost:8989/",
-  "tokenKey": "token"
+  "tokenKey": "token",
+  "tokenKeyAdmin": "tokenAdmin"
 }
