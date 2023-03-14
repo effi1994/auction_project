@@ -2,9 +2,6 @@ import {useState, useEffect} from "react";
 import {Cookies} from 'react-cookie';
 import {useNavigate, Link} from "react-router-dom";
 import config from "../config.json";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 import {
     IconButton,
     Paper,
@@ -16,10 +13,12 @@ import {
     TableRow, Tooltip, TablePagination, TextField
 } from "@mui/material";
 import StyledButton from "../components/Styled/StyledButton";
+import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 
 import {randomUniqKey} from "../utilities/utilities"
-import {getUser} from "../services/userAtuhService";
+import {getToken, getUser} from "../services/userAtuhService";
 import {getTable} from "../services/TableMainService";
+import AddProductModal from "../modles/AddProductModal ";
 
 const HomeTable = (props) => {
     const [user, setUser] = useState({});
@@ -29,6 +28,8 @@ const HomeTable = (props) => {
     const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [open, setOpen] = useState(false);
+
 
 
     const navigate = useNavigate();
@@ -54,19 +55,27 @@ const HomeTable = (props) => {
     useEffect(() => {
         const eventSource = new EventSource(config.apiUrl + "/sse-handler-main-table");
         eventSource.onmessage = event => {
+            debugger;
             const updateTable = JSON.parse(event.data);
             if (updateTable.statement === 1) {
                 setMainTableModels((prevMainTableModel) => {
                     const newMainTableModel = prevMainTableModel.slice();
+                    const copy =[];
+                    copy.push(updateTable);
+                    copy.push(...newMainTableModel);
                     newMainTableModel.push(updateTable);
-                    return newMainTableModel;
+                    return copy;
 
                 })
 
                 setFilteredProducts((prevFilteredProducts) => {
                     const newFilteredProducts = prevFilteredProducts.slice();
+                    const copy =[];
+                    copy.push(updateTable);
+                    copy.push(...newFilteredProducts);
                     newFilteredProducts.push(updateTable);
-                    return newFilteredProducts;
+                    return copy;
+
 
                 });
 
@@ -89,8 +98,8 @@ const HomeTable = (props) => {
                 setMainTableModels((prevMainTableModel) => {
                     const newMainTableModel = prevMainTableModel.slice();
                     const index = newMainTableModel.findIndex((product) => product.id === updateTable.id);
-                    if (updateTable.bidUserId !==user.id){
-                        updateTable.myBids =0;
+                    if (updateTable.bidToken !==getToken()){
+                        updateTable.myBids =newMainTableModel[index].myBids;
                     }
 
                     newMainTableModel[index] = updateTable;
@@ -100,6 +109,11 @@ const HomeTable = (props) => {
                 setFilteredProducts((prevFilteredProducts) => {
                     const newFilteredProducts = prevFilteredProducts.slice();
                     const index = newFilteredProducts.findIndex((product) => product.id === updateTable.id);
+
+
+                    if (updateTable.bidToken !==getToken()){
+                        updateTable.myBids =newFilteredProducts[index].myBids;
+                    }
                     newFilteredProducts[index] = updateTable;
                     return newFilteredProducts;
                 })
@@ -123,7 +137,8 @@ const HomeTable = (props) => {
     };
 
     const addNewProduct = () => {
-        console.log("add new product");
+        setOpen(true);
+
         //navigate('/addProduct');
     }
 
@@ -159,9 +174,10 @@ const HomeTable = (props) => {
                     onClick={addNewProduct}
                 >Add new product</StyledButton>
 
+
             }
 
-
+            <AddProductModal open={open} setOpen={setOpen} handleChangeFilter={handleChangeFilter}/>
             <TextField
                 sx={{
                     margin: "10px"
@@ -170,14 +186,14 @@ const HomeTable = (props) => {
                 onChange={handleSearch}/>
 
 
-            <TableContainer>
-                <Table>
+            <TableContainer TableContainer component={Paper} sx={tableContainerSX}>
+                <Table sx={{minWidth: 650}} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="right">Name</TableCell>
-                            <TableCell align="right"></TableCell>
-                            <TableCell align="right">Date open</TableCell>
-                            <TableCell align="right">General bids</TableCell>
+                            <TableCell align="center">Name</TableCell>
+                            <TableCell align="center"></TableCell>
+                            <TableCell align="center">Date open</TableCell>
+                            <TableCell align="center">General bids</TableCell>
                             {
                                 !user.admin &&
                                 <TableCell align="right">My bids</TableCell>
@@ -187,12 +203,12 @@ const HomeTable = (props) => {
                     </TableHead>
                     <TableBody>
                         {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <TableRow key={row.id}>
-                                <TableCell align="right"><Link
-                                    to={`/products/${row.id}`}>{row.name}</Link></TableCell>
-                                <TableCell align="right">{row.linkImage}</TableCell>
-                                <TableCell align="right">{row.date}</TableCell>
-                                <TableCell align="right">{row.generalBids}</TableCell>
+                            <TableRow key={randomUniqKey()}>
+                                <TableCell align="center"><Link
+                                    to={`/product/${row.id}`}>{row.name}</Link></TableCell>
+                                <TableCell align="center"><img style={{ maxWidth: '100px', maxHeight: '100px' }} src={row.linkImage} alt={"green iguana"} /></TableCell>
+                                <TableCell align="center">{row.date}</TableCell>
+                                <TableCell align="center">{row.generalBids}</TableCell>
                                 {
                                     !user.admin &&
                                     <TableCell align="right">{row.myBids}</TableCell>

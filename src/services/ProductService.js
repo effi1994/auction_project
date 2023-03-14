@@ -12,6 +12,7 @@ export const getMyProducts = (token, callback) => {
     sendApiPostRequest(urlApi + "/get-my-products", {token}, (response) => {
         if (response.data.success) {
             callback(response.data.myProducts);
+            console.log(response.data.myProducts)
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);
@@ -33,11 +34,19 @@ export const getProduct = (token, productId, callback,callback2) => {
     })
 }
 
-export const addProduct = (token, productName, content, imageLink,minimumPrice,openToAction ,callback) => {
-    sendApiPostRequest(urlApi + "/add-product", {token, productName, content, imageLink,minimumPrice,openToAction}, (response) => {
+export const addProduct = (token, name, description, imageLink, minPrice,callback,callback2) => {
+    let openToAction =true;
+    sendApiPostRequest(urlApi + "/add-product",
+        {token,
+            productName:name,
+            content:description,
+            imageLink:imageLink,
+            minimumPrice:minPrice,
+            openToAction}, (response) => {
         if (response.data.success) {
             toast.success("Product added successfully");
-            callback("/");
+            callback();
+            //callback2("/");
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);

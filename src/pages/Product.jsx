@@ -4,8 +4,8 @@ import {getToken, getUser} from '../services/userAtuhService';
 import {Cookies} from 'react-cookie';
 import config from "../config.json";
 import {useNavigate} from "react-router-dom";
-import {getProduct,closeProduct} from "../services/ProductService";
-import  {addBid} from "../services/BidService";
+import {getProduct, closeProduct} from "../services/ProductService";
+import {addBid} from "../services/BidService";
 import {
     Box,
     Button,
@@ -20,12 +20,14 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, TablePagination
+    TableRow, TablePagination, Paper
 } from "@mui/material";
+import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 
 import {globalStyle, boxSX} from "../components/Styled/ConstantsStyle"
 import {FormLabel, FormControlLabel} from '@mui/material';
 import StyledButton from "../components/Styled/StyledButton";
+import {randomUniqKey} from "../utilities/utilities"
 
 
 function Product() {
@@ -46,7 +48,7 @@ function Product() {
                 setIsAdmin((cookies.get(config.tokenKeyAdmin) === 'true'));
                 getUser(token, setUser);
                 if (id)
-                    getProduct(token, id, setProduct,setMyBids);
+                    getProduct(token, id, setProduct, setMyBids);
 
             } else {
                 navigate('/login');
@@ -80,51 +82,13 @@ function Product() {
     const closeAction = () => {
         const token = getToken();
         if (token) {
-            closeProduct(token, id,navigate);
-        } else {
-            navigate('/login');
+            closeProduct(token, id, navigate);
         }
 
     }
 
 
-
-
-
-//content
-// :
-// "hghg"
-// id
-// :
-// 16
-// imageLink
-// :
-// "hjhj"
-// minimumPrice
-// :
-// 100
-// myBids
-// :
-// []
-// numOpenBids
-// :
-// 0
-// openToAction
-// :
-// true
-// productName
-// :
-// "tot"
-// publishDate
-// :
-// "2023-03-09 09:10"
-// publishUserId
-// :
-// 10
-// username
-// :
-// "effi287586@"
-    const productImage = 'https://cdn3.careeraddict.com/uploads/article/60419/entrepreneurship-product-ideas.png';
+    const productImage = product.imageLink;
     return (
         <div>
             <h1>Product</h1>
@@ -138,12 +102,8 @@ function Product() {
 
                 <div>
                     <label>Product Image: </label>
-                    <CardMedia
-                        component="img"
-                        height="194"
-                        image={productImage}
-                        alt="green iguana"
-                    />
+                    <br/>
+                    <img style={{maxWidth: '100px', maxHeight: '100px'}} src={productImage} alt={"green iguana"}/>
                 </div>
 
                 <div>
@@ -165,7 +125,7 @@ function Product() {
                 </div>
 
                 {
-                    user.id === product.publishUserId && product.openToAction == true &&
+                    user.id === product.publishUserId && product.openToAction == true && !isAdmin &&
 
                     <div>
                         <Button
@@ -180,80 +140,82 @@ function Product() {
 
             </form>
 
-            <>
-                <h1>My Bids</h1>
-                <TextField
-                    id="outlined-basic"
-                    label="Bid Price"
-                    variant="outlined"
-                    value={bid}
-                    onChange={handleBid}
-                    sx={{
-                        margin: "10px"
-                    }}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">$</InputAdornment>,
-                    }}
-                />
+            {
+                product.openToAction == true && user.id !== product.publishUserId && !isAdmin &&
 
-                <StyledButton
-                    variant="contained"
-                    sx={{
-                        margin: "10px"
+                <>
+                    <h1>My Bids</h1>
+                    <TextField
+                        id="outlined-basic"
+                        label="Bid Price"
+                        variant="outlined"
+                        value={bid}
+                        onChange={handleBid}
+                        sx={{
+                            margin: "10px"
+                        }}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">$</InputAdornment>,
+                        }}
+                    />
 
-                    }}
-                    text={"Add Bid"}
-                    icon={"+"}
-                    onClick={handleAddBid}
-                >
-                    Add Bid
-                </StyledButton>
+                    <StyledButton
+                        variant="contained"
+                        sx={{
+                            margin: "10px"
+
+                        }}
+                        text={"Add Bid"}
+                        icon={"+"}
+                        onClick={handleAddBid}
+                    >
+                        Add Bid
+                    </StyledButton>
 
 
+                    {
 
-
-                {
-
-                    myBids && myBids.length > 0 &&
-                    <div>
-                        <TableContainer>
-                            <Table >
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell></TableCell>
-                                        <TableCell>Bid Price</TableCell>
-                                    </TableRow>
-                                </TableHead>
-
-                                <TableBody>
-                                    {myBids.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                                        <TableRow
-                                            key={row.id}
-                                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                                        >
-                                            <TableCell component="th" scope="row">
-                                                {row.id}
-                                            </TableCell>
-                                            <TableCell>{row.userBid}</TableCell>
+                        myBids && myBids.length > 0 &&
+                        <div>
+                            <TableContainer TableContainer component={Paper} sx={tableContainerSX}>
+                                <Table sx={{minWidth: 650}} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell></TableCell>
+                                            <TableCell align="center">Bid Price</TableCell>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={rowsPerPageOptions}
-                            component="div"
-                            count={myBids.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </div>
-                }
+                                    </TableHead>
+
+                                    <TableBody>
+                                        {myBids.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
+                                            <TableRow
+                                                key={randomUniqKey()}
+                                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                            >
+                                                <TableCell component="th" scope="row">
+                                                    {i + 1}
+                                                </TableCell>
+                                                <TableCell align="center">{row.userBid}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={rowsPerPageOptions}
+                                component="div"
+                                count={myBids.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                            />
+                        </div>
+                    }
 
 
-            </>
+                </>
+            }
 
 
         </div>

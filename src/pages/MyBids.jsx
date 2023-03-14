@@ -10,17 +10,17 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,  TablePagination
+    TableRow, TablePagination
 } from "@mui/material";
-import {getMyProducts} from "../services/ProductService";
+import {getMyBids} from "../services/BidService";
+import {randomUniqKey} from "../utilities/utilities"
 
 
-const MyProducts = (props) => {
-    const [myProducts, setMyProducts] = useState([]);
+const MyBids = (props) => {
+    const [MyBidsModels, setMyBidsModels] = useState([]);
     const rowsPerPageOptions = [5, 10, 25]; // Options for rows per page dropdown
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,21 +30,24 @@ const MyProducts = (props) => {
         if (isAdmin === 'true')
             navigate('/');
         if (token && isAdmin) {
-            getMyProducts(token, setMyProducts);
+            getMyBids(token, setMyBidsModels);
         } else {
             navigate('/');
         }
+
+
     }, []);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-    }
+    };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    }
-    //id: 82, name: 'aple', bidMax: 0, openToAction: true
+    };
+    //{id: 21, name: 'all', bid: 100, openToAction: true, isWinner: 3}
+    //isWinner: 3 - NO RESULT, 2 - LOSS, 1 - winner
 
     return (
         <div>
@@ -53,21 +56,25 @@ const MyProducts = (props) => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Product Name</TableCell>
-                            <TableCell align="center">Bid Max</TableCell>
+                            <TableCell align="center">Bid</TableCell>
                             <TableCell align="right">Open/Close</TableCell>
+                            <TableCell align="right">Result</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {myProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        {MyBidsModels.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <TableRow
-                                key={row.id}
+                                key={randomUniqKey()}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
                             >
                                 <TableCell component="th" scope="row">
-                                    <Link to={`/product/${row.id}`}>{row.name}</Link>
+                                    <Link
+                                        to={`/product/${row.id}`}>{row.name}</Link>
                                 </TableCell>
-                                <TableCell align="center">{row.bidMax}</TableCell>
-                                <TableCell align="right">{row.openToAction ? 'open' : 'close'}</TableCell>
+                                <TableCell align="center">{row.bid}</TableCell>
+                                <TableCell align="right">{row.openToAction ? 'Open' : 'Close'}</TableCell>
+                                <TableCell
+                                    align="right">{row.isWinner === 3 ? 'No Result' : row.isWinner === 2 ? 'Loss' : 'Winner'}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -76,14 +83,16 @@ const MyProducts = (props) => {
             <TablePagination
                 rowsPerPageOptions={rowsPerPageOptions}
                 component="div"
-                count={myProducts.length}
+                count={MyBidsModels.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
         </div>
-
     );
+
+
 }
-export default MyProducts;
+
+export default MyBids;

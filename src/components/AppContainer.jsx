@@ -1,9 +1,6 @@
 import React from 'react';
 import {Route, Routes, useLocation} from "react-router-dom";
 import Header from "./Header";
-import LiveResults from "../pages/LiveResults";
-import LeagueTable from "../pages/LeagueTable";
-import LeagueTableLive from "../pages/LeagueTableLive";
 import Login from "../pages/Login";
 import {Container} from "@mui/material";
 import {useEffect, useState} from "react";
@@ -14,9 +11,10 @@ import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HomeTable from "../pages/HomeTable";
 import Product from "../pages/Product";
-import {getTeams} from "../services/teamService";
-import {getEndGames} from "../services/gameService";
-import {calculateTableLeague, tableLeagueEnd} from "../services/CalculationTableService";
+import MyProducts from "../pages/MyProducts";
+import MyBids from "../pages/MyBids";
+import UsersSystem from "../pages/UsersSystem";
+import UserDetails from "../pages/UserDetails";
 
 const AppContainer = () => {
 
@@ -30,7 +28,7 @@ const AppContainer = () => {
             const interval = setInterval(() => {
                 let token = getToken();
                 getCredits(token,setCredit);
-                setToken(getToken());
+                //setToken(getToken());
             }, 1000);
             return () => clearInterval(interval);
 
@@ -58,11 +56,14 @@ const AppContainer = () => {
             <Container>
                 <Routes>
                     <Route path={"/"} element={<HomeTable user={user}/>}/>
-                    <Route path={"/league-table"} element={<LeagueTable/>}/>
-                    <Route path={"/league-table-live"} element={<LeagueTableLive/>}/>
+                    <Route path={"/my-products"} element={<MyProducts/>}/>
+                    <Route path={"/my-bids"} element={<MyBids/>}/>
                     <Route path={"/login"} element={<Login token={token} onToken={handleToken}/>}/>
                     <Route path={"/signup"} element={<SignUP token={token} onToken={handleToken}/>}/>
-                    <Route path={"/products/:id"} element={<Product/>}/>
+                    <Route path={"/product/:id"} element={<Product/>}/>
+                    <Route path={"*"} element={<h1>404 Not Found</h1>}/>
+                    <Route path={"/users"} element={<UsersSystem/>}/>
+                    <Route path={"/user/:id"} element={<UserDetails/>}/>
                 </Routes>
             </Container>
         </>

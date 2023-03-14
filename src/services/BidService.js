@@ -11,8 +11,6 @@ export  const addBid = (token, productId, bidAmount, callback) => {
     sendApiPostRequest(urlApi + "/add-bid", {token, productId, bidAmount}, (response) => {
         if (response.data.success) {
             toast.success("Bid added successfully");
-            console.log(response.data);
-
             callback(
                 (prevMyBids) => {
                     const newMyBids = prevMyBids.slice();
@@ -31,7 +29,8 @@ export  const addBid = (token, productId, bidAmount, callback) => {
 export const getMyBids = (token, callback) => {
     sendApiPostRequest(urlApi + "/get-my-bids", {token}, (response) => {
         if (response.data.success) {
-            callback(response.data.myBidsModelList);
+            callback(response.data.myBids);
+            console.log(response.data)
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);

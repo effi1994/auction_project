@@ -2,35 +2,37 @@ import {useState, useEffect} from "react";
 import {Cookies} from 'react-cookie';
 import {useNavigate, Link} from "react-router-dom";
 import config from "../config.json";
-import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 import {
+    IconButton,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,  TablePagination
+    TableRow, Tooltip, TablePagination, TextField
 } from "@mui/material";
-import {getMyProducts} from "../services/ProductService";
+import StyledButton from "../components/Styled/StyledButton";
+import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 
+import {randomUniqKey} from "../utilities/utilities"
+import {getAllUsers} from "../services/ManageService";
 
-const MyProducts = (props) => {
-    const [myProducts, setMyProducts] = useState([]);
+const UsersSystem = (props) => {
+    const [users, setUsers] = useState([]);
     const rowsPerPageOptions = [5, 10, 25]; // Options for rows per page dropdown
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
-
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const cookies = new Cookies();
         const token = cookies.get(config.tokenKey);
-        const isAdmin = cookies.get(config.tokenKeyAdmin);
-        if (isAdmin === 'true')
-            navigate('/');
-        if (token && isAdmin) {
-            getMyProducts(token, setMyProducts);
+        const admin = cookies.get(config.tokenKeyAdmin);
+
+        if (admin === 'true') {
+            getAllUsers(token, setUsers);
         } else {
             navigate('/');
         }
@@ -44,30 +46,36 @@ const MyProducts = (props) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     }
-    //id: 82, name: 'aple', bidMax: 0, openToAction: true
+
+    //id: 6, username: 'effi26@'
 
     return (
         <div>
+            <h1>Users System</h1>
             <TableContainer component={Paper} sx={tableContainerSX}>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Product Name</TableCell>
-                            <TableCell align="center">Bid Max</TableCell>
-                            <TableCell align="right">Open/Close</TableCell>
+                            <TableCell align="center"></TableCell>
+                            <TableCell align="center">Username</TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {myProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, i) => (
                             <TableRow
-                                key={row.id}
+                                key={randomUniqKey()}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
                             >
-                                <TableCell component="th" scope="row">
-                                    <Link to={`/product/${row.id}`}>{row.name}</Link>
+                                <TableCell align={"center"}>
+                                    {i + 1}
                                 </TableCell>
-                                <TableCell align="center">{row.bidMax}</TableCell>
-                                <TableCell align="right">{row.openToAction ? 'open' : 'close'}</TableCell>
+                                <TableCell align="center">
+                                    <Link to={`/user/${user.id}`}>
+                                        {user.username}
+                                    </Link>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -76,7 +84,7 @@ const MyProducts = (props) => {
             <TablePagination
                 rowsPerPageOptions={rowsPerPageOptions}
                 component="div"
-                count={myProducts.length}
+                count={users.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -84,6 +92,9 @@ const MyProducts = (props) => {
             />
         </div>
 
-    );
+
+    )
+
+
 }
-export default MyProducts;
+export default UsersSystem;
