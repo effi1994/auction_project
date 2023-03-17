@@ -15,15 +15,28 @@ import MyProducts from "../pages/MyProducts";
 import MyBids from "../pages/MyBids";
 import UsersSystem from "../pages/UsersSystem";
 import UserDetails from "../pages/UserDetails";
+import {Cookies} from "react-cookie";
+import config from "../config.json";
+const linksUser = [
+    {titlePage: "Home", path: "/"},
+    {titlePage: "My Products", path: "/my-products"},
+    {titlePage: "My Bids", path: "/my-bids"},
+]
+
+const linksAdmin = [
+    {titlePage: "Home", path: "/"},
+    {titlePage: "Users", path: "/users"},
+
+];
 
 const AppContainer = () => {
 
     let location = useLocation();
     const [token, setToken] = useState(null);
     const [credit, setCredit] = useState(0);
+    const cookies = new Cookies();
+    const admin = cookies.get(config.tokenKeyAdmin);
     useEffect( () => {
-       // getLiveGames();
-        getStatist();
         if (getToken()){
             const interval = setInterval(() => {
                 let token = getToken();
@@ -32,15 +45,14 @@ const AppContainer = () => {
             }, 1000);
             return () => clearInterval(interval);
 
-
-
         }else {
-            setToken(null);
+
         }
-        //getTeams();
 
 
-    },[])
+
+
+    })
 
     const handleToken = (token) => {
         setToken(token);
@@ -50,7 +62,10 @@ const AppContainer = () => {
             <ToastContainer/>
             {
                 getToken() &&
-                <Header path={location.pathname} token={token} credit={credit}/>
+                <Header path={location.pathname} token={token} credit={credit}
+                        links={
+                            admin === 'true' ? linksAdmin : linksUser
+                        }/>
             }
 
             <Container>

@@ -74,6 +74,7 @@ function Product() {
         const token = getToken();
         if (token) {
             addBid(token, id, bid, setMyBids);
+            setBid(0);
         } else {
 
         }
@@ -157,6 +158,7 @@ function Product() {
                         InputProps={{
                             endAdornment: <InputAdornment position="end">$</InputAdornment>,
                         }}
+                        type={"number"}
                     />
 
                     <StyledButton

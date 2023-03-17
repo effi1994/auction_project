@@ -10,8 +10,6 @@ export const getStatist= (callback) => {
     sendApiGetRequest(urlApi + "/statist", (response) => {
         if (response.data.success) {
             callback(response.data.statistics);
-            //statist = response.data.statistics;
-           // console.log(statist);
         }else {
             statist = null;
         }

@@ -10,7 +10,16 @@ const cookies = new Cookies();
 export  const addBid = (token, productId, bidAmount, callback) => {
     sendApiPostRequest(urlApi + "/add-bid", {token, productId, bidAmount}, (response) => {
         if (response.data.success) {
-            toast.success("Bid added successfully");
+            toast.success("Bid added successfully", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
             callback(
                 (prevMyBids) => {
                     const newMyBids = prevMyBids.slice();
@@ -30,7 +39,6 @@ export const getMyBids = (token, callback) => {
     sendApiPostRequest(urlApi + "/get-my-bids", {token}, (response) => {
         if (response.data.success) {
             callback(response.data.myBids);
-            console.log(response.data)
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);

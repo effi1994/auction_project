@@ -35,7 +35,16 @@ export const updateCreditsUser = (amount, userId, callback) => {
     sendApiPostRequest(urlApi + "/update-credit-amount-user", {amount:amount, userId:userId},
         (response) => {
         if (response.data.success) {
-            toast.success("Credits updated successfully");
+            toast.success("Credits updated successfully", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
             callback('../users');
         } else {
             let errorCode = response.data.errorCode;

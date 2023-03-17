@@ -19,7 +19,7 @@ import {randomUniqKey} from "../utilities/utilities"
 import {getToken, getUser} from "../services/userAtuhService";
 import {getTable} from "../services/TableMainService";
 import AddProductModal from "../modles/AddProductModal ";
-
+import {toast} from 'react-toastify';
 const HomeTable = (props) => {
     const [user, setUser] = useState({});
     const [mainTableModels, setMainTableModels] = useState([]);
@@ -52,10 +52,22 @@ const HomeTable = (props) => {
 
     }, []);
 
+  /*  useEffect(() => {
+        const cookies = new Cookies();
+        const token = cookies.get(config.tokenKey);
+        const eventSource = new EventSource(config.apiUrl + "/sse-handler?token="+ token);
+        eventSource.onmessage = event => {
+            const newStats = JSON.parse(event.data);
+            console.log(newStats);
+
+        }
+    }, [])*/
+
+
+
     useEffect(() => {
         const eventSource = new EventSource(config.apiUrl + "/sse-handler-main-table");
         eventSource.onmessage = event => {
-            debugger;
             const updateTable = JSON.parse(event.data);
             if (updateTable.statement === 1) {
                 setMainTableModels((prevMainTableModel) => {
@@ -79,6 +91,18 @@ const HomeTable = (props) => {
 
                 });
 
+                if (updateTable.bidToken !==getToken())
+                toast.success(`New Product ${updateTable.name} add` , {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+
             } else if (updateTable.statement === 2) {
                 setMainTableModels((prevMainTableModel) => {
                     const newMainTableModel = prevMainTableModel.slice();
@@ -94,6 +118,17 @@ const HomeTable = (props) => {
                     return newFilteredProducts;
                 })
 
+                toast.success("Product sell", {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+
             } else if (updateTable.statement === 3) {
                 setMainTableModels((prevMainTableModel) => {
                     const newMainTableModel = prevMainTableModel.slice();
@@ -101,6 +136,18 @@ const HomeTable = (props) => {
                     if (updateTable.bidToken !==getToken()){
                         updateTable.myBids =newMainTableModel[index].myBids;
                     }
+                   if (updateTable.publishToken === getToken()){
+                        toast.success(`bid ${updateTable.name}`, {
+                            position: "top-center",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
+                   }
 
                     newMainTableModel[index] = updateTable;
                     return newMainTableModel;
@@ -117,6 +164,7 @@ const HomeTable = (props) => {
                     newFilteredProducts[index] = updateTable;
                     return newFilteredProducts;
                 })
+
             }
         }
         return () => {
@@ -186,7 +234,7 @@ const HomeTable = (props) => {
                 onChange={handleSearch}/>
 
 
-            <TableContainer TableContainer component={Paper} sx={tableContainerSX}>
+            <TableContainer  component={Paper} sx={tableContainerSX}>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
                     <TableHead>
                         <TableRow>

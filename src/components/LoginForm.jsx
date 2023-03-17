@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import {useState} from "react";
+import React, {useState} from "react";
 import {login} from '../services/userAtuhService';
 import {globalStyle, boxSX} from "./Styled/ConstantsStyle"
 import {useNavigate} from "react-router-dom";
@@ -25,6 +25,7 @@ const LoginForm = (props) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const [statists, setStatist] = useState({})
     const navigate = useNavigate();
 
 
@@ -44,17 +45,70 @@ const LoginForm = (props) => {
         setUsername(e.target.value);
     };
 
+
     const onLogin = () => {
-        login(username, password,navigate);
+        login(username, password, navigate);
     }
 
     const signUp = () => {
         navigate("/signup");
     }
 
+    // <form>
+    //                 <h1>System Statistics</h1>
+    //                 <p>
+    //                     <label>Number of users:</label>
+    //                     <span>{p.statists.numUsers}</span>
+    //                 </p>
+    //                 <p>
+    //                     <label>Number of open tenders:</label>
+    //                     <span>{statists.numOpenTenders}</span>
+    //                 </p>
+    //                 <p>
+    //                     <label>Number of closed tenders:</label>
+    //                     <span>{statists.numClosedTenders}</span>
+    //                 </p>
+    //                 <p>
+    //                     <label>Number of open bids:</label>
+    //                     <span>{statists.numOpenBids}</span>
+    //                 </p>
+    //                 <p>
+    //                     <label>Number of closed bids:</label>
+    //                     <span>{statists.numClosedBids}</span>
+    //                 </p>
+    //             </form>
+
 
     return (
         <div>
+
+            <form>
+                <h1>System Statistics</h1>
+                <p>
+                    <label>Number of users:</label>
+                    <span>{props.statists.numUsers}</span>
+                </p>
+                <p>
+                    <label>Number of open tenders:</label>
+                    <span>{props.statists.numOpenTenders}</span>
+                </p>
+                <p>
+                    <label>Number of closed tenders:</label>
+                    <span>{props.statists.numClosedTenders}</span>
+                </p>
+                <p>
+                    <label>Number of open bids:</label>
+                    <span>{props.statists.numOpenBids}</span>
+                </p>
+                <p>
+                    <label>Number of closed bids:</label>
+                    <span>{props.statists.numClosedBids}</span>
+                </p>
+            </form>
+
+
+
+
             <form>
                 <Box display={"flex"}
                      flexDirection={"column"}
@@ -146,10 +200,10 @@ const LoginForm = (props) => {
                     </Button>
 
 
-                        </Box>
-                        </form>
-                        </div>
-                        );
-                    };
+                </Box>
+            </form>
+        </div>
+    );
+};
 
-                    export default LoginForm;
+export default LoginForm;

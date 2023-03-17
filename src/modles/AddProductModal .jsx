@@ -49,17 +49,39 @@ const AddProductModal = (props) => {
         props.setOpen(false)
     };
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-        const token = getToken();
-        if (token){
-            addProduct(token, name, description, imageLink, minPrice,handleClose,navigate);
+    const handleNameChange = (e) => {
+        setName(e.target.value);
+    }
+
+    const handleDescriptionChange = (e) => {
+        setDescription(e.target.value);
+    }
+
+    const handleImageLinkChange = (e) => {
+        setImageLink(e.target.value);
+    }
+
+    const handleMinPriceChange = (e) => {
+        let isNum = /^\d+$/.test(e.target.value);
+        if (isNum) {
+            setMinPrice(e.target.value);
+        } if (e.target.value === '') {
+            setMinPrice(e.target.value);
         }
 
 
+    }
 
-       // handleClose();
-    };
+    const onSubmit = (e) => {
+        e.preventDefault();
+        const token = getToken();
+        if (token) {
+            addProduct(token, name, description, imageLink, minPrice, handleClose, navigate);
+        }
+
+    }
+
+    const checkIfEmpty = name === '' || description === '' || imageLink === '' || minPrice === '';
 
     return (
         <>
@@ -102,7 +124,7 @@ const AddProductModal = (props) => {
                         <TextField
                             label="Minimum Price"
                             value={minPrice}
-                            onChange={(e) => setMinPrice(e.target.value)}
+                            onChange={handleMinPriceChange}
                             type="number"
                             InputProps={{inputProps: {min: 0}}}
                             required
@@ -118,6 +140,7 @@ const AddProductModal = (props) => {
                             text={"Save"}
                             icon={"v"}
                             onClick={onSubmit}
+                            disabled={checkIfEmpty}
 
                         >
                             Save

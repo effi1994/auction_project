@@ -17,7 +17,16 @@ export const login = (username, password, callback) => {
     }, (response) => {
         if (response.data.success) {
             //user = response.data.userObject;
-            toast.success("login successfully");
+            toast.success("login successfully", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
             callback("/");
 
             cookies.set(config.tokenKey, response.data.token, {path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24)});
@@ -33,10 +42,11 @@ export const getToken = () => {
     return cookies.get(config.tokenKey);
 }
 
-export const logout = () => {
+export const logout = (callback) => {
     cookies.remove(config.tokenKey);
     cookies.remove(config.tokenKeyAdmin);
     user = null;
+    callback("/login");
 }
 
 
@@ -61,7 +71,17 @@ export const signUp = (username, password, callback) => {
     }, (response) => {
         if (response.data.success) {
 
-            toast.success("Sign up successfully");
+            toast.success("Sign up successfully",
+                {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
 
             callback("/login");
 
