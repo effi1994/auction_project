@@ -53,6 +53,9 @@ const SignUpFrom = (props) => {
             signUp(username, password, navigate);
 
     }
+    const onBackToLogin = () =>{
+        navigate('/login');
+    }
 
 
     const disabledButton = () => {
@@ -65,8 +68,26 @@ const SignUpFrom = (props) => {
 
 
     return (
-        <div>
+        <div
+            style={{
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+            }}
+        >
             <form>
+                <Button
+                    variant={"contained"}
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        marginTop: 2
+                    }}
+                    onClick={onBackToLogin}>
+                 Go Back
+                </Button>
                 <Box display={"flex"}
                      flexDirection={"column"}
 

@@ -60,31 +60,29 @@ const LoginForm = (props) => {
     return (
         <div>
 
-            <form>
-                <h1>System Statistics</h1>
-                <p>
-                    <label>Number of users:</label>
+            <form style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <h1 style={{marginBottom: "30px"}}>System Statistics</h1>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of users:</label>
                     <span>{props.statists.numUsers}</span>
-                </p>
-                <p>
-                    <label>Number of open tenders:</label>
+                </div>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of open tenders:</label>
                     <span>{props.statists.numOpenTenders}</span>
-                </p>
-                <p>
-                    <label>Number of closed tenders:</label>
+                </div>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of closed tenders:</label>
                     <span>{props.statists.numClosedTenders}</span>
-                </p>
-                <p>
-                    <label>Number of open bids:</label>
+                </div>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of open bids:</label>
                     <span>{props.statists.numOpenBids}</span>
-                </p>
-                <p>
-                    <label>Number of closed bids:</label>
+                </div>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of closed bids:</label>
                     <span>{props.statists.numClosedBids}</span>
-                </p>
+                </div>
             </form>
-
-
 
 
             <form>
