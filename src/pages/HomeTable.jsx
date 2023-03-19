@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import {Cookies} from 'react-cookie';
 import {useNavigate, Link} from "react-router-dom";
+import TableSortLabel from '@mui/material/TableSortLabel';
 import config from "../config.json";
 import {
     IconButton,
@@ -10,7 +11,10 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, Tooltip, TablePagination, TextField
+    TableRow,
+    Tooltip,
+    TablePagination,
+    TextField
 } from "@mui/material";
 import StyledButton from "../components/Styled/StyledButton";
 import {tableContainerSX} from "../components/Styled/ConstantsStyle";
@@ -20,6 +24,10 @@ import {getToken, getUser} from "../services/userAtuhService";
 import {getTable} from "../services/TableMainService";
 import AddProductModal from "../modles/AddProductModal ";
 import {toast} from 'react-toastify';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import './css/table.css';
+
 const HomeTable = (props) => {
     const [user, setUser] = useState({});
     const [mainTableModels, setMainTableModels] = useState([]);
@@ -29,9 +37,8 @@ const HomeTable = (props) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [open, setOpen] = useState(false);
-
-
-
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortField, setSortField] = useState('name');
     const navigate = useNavigate();
 
 
@@ -52,18 +59,6 @@ const HomeTable = (props) => {
 
     }, []);
 
-  /*  useEffect(() => {
-        const cookies = new Cookies();
-        const token = cookies.get(config.tokenKey);
-        const eventSource = new EventSource(config.apiUrl + "/sse-handler?token="+ token);
-        eventSource.onmessage = event => {
-            const newStats = JSON.parse(event.data);
-            console.log(newStats);
-
-        }
-    }, [])*/
-
-
 
     useEffect(() => {
         const eventSource = new EventSource(config.apiUrl + "/sse-handler-main-table");
@@ -72,7 +67,7 @@ const HomeTable = (props) => {
             if (updateTable.statement === 1) {
                 setMainTableModels((prevMainTableModel) => {
                     const newMainTableModel = prevMainTableModel.slice();
-                    const copy =[];
+                    const copy = [];
                     copy.push(updateTable);
                     copy.push(...newMainTableModel);
                     newMainTableModel.push(updateTable);
@@ -82,7 +77,7 @@ const HomeTable = (props) => {
 
                 setFilteredProducts((prevFilteredProducts) => {
                     const newFilteredProducts = prevFilteredProducts.slice();
-                    const copy =[];
+                    const copy = [];
                     copy.push(updateTable);
                     copy.push(...newFilteredProducts);
                     newFilteredProducts.push(updateTable);
@@ -91,8 +86,7 @@ const HomeTable = (props) => {
 
                 });
 
-                if (updateTable.bidToken !==getToken())
-                toast.success(`New Product ${updateTable.name} add` , {
+                if (updateTable.bidToken !== getToken()) toast.success(`New Product ${updateTable.name} add`, {
                     position: "top-center",
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -117,38 +111,27 @@ const HomeTable = (props) => {
                     newFilteredProducts.splice(index, 1);
                     return newFilteredProducts;
                 })
-
-                toast.success("Product sell", {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
+                console.log(updateTable);
+                if (updateTable.bidToken === getToken()) {
+                    toast.success(`Product ${updateTable.name} sell to ${updateTable.usernameWinnerOrBidder}`, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                }
 
             } else if (updateTable.statement === 3) {
                 setMainTableModels((prevMainTableModel) => {
                     const newMainTableModel = prevMainTableModel.slice();
                     const index = newMainTableModel.findIndex((product) => product.id === updateTable.id);
-                    if (updateTable.bidToken !==getToken()){
-                        updateTable.myBids =newMainTableModel[index].myBids;
+                    if (updateTable.bidToken !== getToken()) {
+                        updateTable.myBids = newMainTableModel[index].myBids;
                     }
-                   if (updateTable.publishToken === getToken()){
-                        toast.success(`bid ${updateTable.name}`, {
-                            position: "top-center",
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "colored",
-                        });
-                   }
-
                     newMainTableModel[index] = updateTable;
                     return newMainTableModel;
                 })
@@ -158,12 +141,25 @@ const HomeTable = (props) => {
                     const index = newFilteredProducts.findIndex((product) => product.id === updateTable.id);
 
 
-                    if (updateTable.bidToken !==getToken()){
-                        updateTable.myBids =newFilteredProducts[index].myBids;
+                    if (updateTable.bidToken !== getToken()) {
+                        updateTable.myBids = newFilteredProducts[index].myBids;
                     }
                     newFilteredProducts[index] = updateTable;
                     return newFilteredProducts;
                 })
+
+                if (updateTable.publishToken === getToken()) {
+                    toast.success(`bid ${updateTable.name} by ${updateTable.usernameWinnerOrBidder}`, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                }
 
             }
         }
@@ -186,8 +182,6 @@ const HomeTable = (props) => {
 
     const addNewProduct = () => {
         setOpen(true);
-
-        //navigate('/addProduct');
     }
 
     const handleSearch = (event) => {
@@ -203,24 +197,61 @@ const HomeTable = (props) => {
 
     }
 
+    const handleSort = (column) => {
+        const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortOrder(newSortOrder);
+        setSortField(column);
+
+        const sortedMainTableModels = mainTableModels.slice().sort((a, b) => {
+            if (a[column] < b[column]) {
+                return newSortOrder === 'asc' ? -1 : 1;
+            }
+            if (a[column] > b[column]) {
+                return newSortOrder === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+        setMainTableModels(sortedMainTableModels);
+
+        const sortedFilteredProducts = filteredProducts.slice().sort((a, b) => {
+            if (a[column] < b[column]) {
+                return newSortOrder === 'asc' ? -1 : 1;
+            }
+            if (a[column] > b[column]) {
+                return newSortOrder === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+        setFilteredProducts(sortedFilteredProducts);
+    };
+
+
+    const getSortIcon = (field) => {
+        if (sortField !== field) {
+            return null;
+        } else if (sortOrder === 'asc') {
+            return <ArrowUpwardIcon/>;
+        } else {
+            return <ArrowDownwardIcon/>;
+        }
+    }
+
 
     return (
 
         <>
 
-            {
-                !user.admin &&
-                <StyledButton
-                    variant="contained"
-                    sx={{
-                        margin: "10px"
+            {!user.admin && <StyledButton
+                variant="contained"
+                sx={{
+                    margin: "10px"
 
-                    }}
-                    text={"Add new product"}
-                    icon={"+"}
+                }}
+                text={"Add new product"}
+                icon={"+"}
 
-                    onClick={addNewProduct}
-                >Add new product</StyledButton>
+                onClick={addNewProduct}
+            >Add new product</StyledButton>
 
 
             }
@@ -234,36 +265,47 @@ const HomeTable = (props) => {
                 onChange={handleSearch}/>
 
 
-            <TableContainer  component={Paper} sx={tableContainerSX}>
+            <TableContainer component={Paper} sx={tableContainerSX}>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center">Name</TableCell>
-                            <TableCell align="center"></TableCell>
-                            <TableCell align="center">Date open</TableCell>
-                            <TableCell align="center">General bids</TableCell>
-                            {
-                                !user.admin &&
-                                <TableCell align="right">My bids</TableCell>
-                            }
+                            <TableCell align="center" onClick={() => handleSort('name')}>
+                                <span style={{cursor: 'pointer'}}>
+                                Name {getSortIcon('name')}
+                                </span>
+
+
+                            </TableCell>
+                            <TableCell align="center">Image</TableCell>
+                            <TableCell align="center" onClick={() => handleSort('date')}>
+                                <span style={{cursor: 'pointer'}}>
+                                Date {getSortIcon('date')}
+                                </span>
+                            </TableCell>
+                            <TableCell align="center" onClick={() => handleSort('generalBids')}>
+                                <span style={{cursor: 'pointer'}}>
+                                General bids {getSortIcon('generalBids')}
+                                </span>
+                            </TableCell>
+                            {!user.admin && <TableCell align="right" onClick={() => handleSort('myBids')}>
+                                <span style={{cursor: 'pointer'}}>
+                                My bids {getSortIcon('myBids')}
+                                </span>
+                            </TableCell>}
 
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <TableRow key={randomUniqKey()}>
-                                <TableCell align="center"><Link
-                                    to={`/product/${row.id}`}>{row.name}</Link></TableCell>
-                                <TableCell align="center"><img style={{ maxWidth: '100px', maxHeight: '100px' }} src={row.linkImage} alt={"green iguana"} /></TableCell>
+                            <TableRow key={randomUniqKey()} component={Link} to={`/product/${row.id}`} className="table-row">
+                                <TableCell align="center">{row.name}</TableCell>
+                                <TableCell align="center"><img style={{maxWidth: '100px', maxHeight: '100px'}}
+                                                               src={row.linkImage} alt={"green iguana"}/></TableCell>
                                 <TableCell align="center">{row.date}</TableCell>
                                 <TableCell align="center">{row.generalBids}</TableCell>
-                                {
-                                    !user.admin &&
-                                    <TableCell align="right">{row.myBids}</TableCell>
-                                }
+                                {!user.admin && <TableCell align="right">{row.myBids}</TableCell>}
 
-                            </TableRow>
-                        ))}
+                            </TableRow>))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -276,8 +318,7 @@ const HomeTable = (props) => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-        </>
-    )
+        </>)
 };
 
 export default HomeTable;

@@ -54,29 +54,7 @@ const LoginForm = (props) => {
         navigate("/signup");
     }
 
-    // <form>
-    //                 <h1>System Statistics</h1>
-    //                 <p>
-    //                     <label>Number of users:</label>
-    //                     <span>{p.statists.numUsers}</span>
-    //                 </p>
-    //                 <p>
-    //                     <label>Number of open tenders:</label>
-    //                     <span>{statists.numOpenTenders}</span>
-    //                 </p>
-    //                 <p>
-    //                     <label>Number of closed tenders:</label>
-    //                     <span>{statists.numClosedTenders}</span>
-    //                 </p>
-    //                 <p>
-    //                     <label>Number of open bids:</label>
-    //                     <span>{statists.numOpenBids}</span>
-    //                 </p>
-    //                 <p>
-    //                     <label>Number of closed bids:</label>
-    //                     <span>{statists.numClosedBids}</span>
-    //                 </p>
-    //             </form>
+
 
 
     return (

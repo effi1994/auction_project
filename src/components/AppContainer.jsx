@@ -6,7 +6,6 @@ import {Container} from "@mui/material";
 import {useEffect, useState} from "react";
 import {getCredits, getToken, user} from "../services/userAtuhService";
 import SignUP from "../pages/SignUP";
-import {getStatist} from "../services/StatistsService";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HomeTable from "../pages/HomeTable";

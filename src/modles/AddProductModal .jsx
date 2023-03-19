@@ -82,6 +82,7 @@ const AddProductModal = (props) => {
     }
 
     const checkIfEmpty = name === '' || description === '' || imageLink === '' || minPrice === '';
+    const checkMinPrice =Number(minPrice) < 1;
 
     return (
         <>
@@ -126,7 +127,7 @@ const AddProductModal = (props) => {
                             value={minPrice}
                             onChange={handleMinPriceChange}
                             type="number"
-                            InputProps={{inputProps: {min: 0}}}
+                            InputProps={{inputProps: {min: 1}}}
                             required
                             fullWidth
                         />
@@ -140,7 +141,7 @@ const AddProductModal = (props) => {
                             text={"Save"}
                             icon={"v"}
                             onClick={onSubmit}
-                            disabled={checkIfEmpty}
+                            disabled={checkIfEmpty || checkMinPrice}
 
                         >
                             Save
