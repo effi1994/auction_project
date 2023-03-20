@@ -1,10 +1,8 @@
 import {useState, useEffect} from "react";
 import {Cookies} from 'react-cookie';
 import {useNavigate, Link} from "react-router-dom";
-import TableSortLabel from '@mui/material/TableSortLabel';
 import config from "../config.json";
 import {
-    IconButton,
     Paper,
     Table,
     TableBody,
@@ -12,9 +10,9 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Tooltip,
     TablePagination,
-    TextField
+    TextField,
+    Alert
 } from "@mui/material";
 import StyledButton from "../components/Styled/StyledButton";
 import {tableContainerSX} from "../components/Styled/ConstantsStyle";
@@ -236,7 +234,6 @@ const HomeTable = (props) => {
         }
     }
 
-
     return (
 
         <>
@@ -244,7 +241,16 @@ const HomeTable = (props) => {
             {!user.admin && <StyledButton
                 variant="contained"
                 sx={{
-                    margin: "10px"
+                    margin: "5px",
+                    width: "200px",
+                    height: "50px",
+                    borderRadius: "10px",
+                    padding: "0px",
+                    fontSize: "16px",
+                    position: "relative",
+                    right: "314px",
+                    top: "10px",
+
 
                 }}
                 text={"Add new product"}
@@ -257,67 +263,89 @@ const HomeTable = (props) => {
             }
 
             <AddProductModal open={open} setOpen={setOpen} handleChangeFilter={handleChangeFilter}/>
-            <TextField
-                sx={{
-                    margin: "10px"
-                }}
-                id="outlined-basic" label="Search" variant="outlined" value={searchTerm}
-                onChange={handleSearch}/>
+
+            {
+                filteredProducts.length > 0 ? <>
+                        <TextField
+
+                            sx={{
+                                margin: "5px",
+                                width: "300px",
+                                height: "50px",
+                                borderRadius: "10px",
+                                backgroundColor: "white",
+                                padding: "0px",
+                                fontSize: "16px",
+                                position: "relative",
+                                left: "120px;",
+                                top: "10px",
+                                transform: "translateX(-50%)"
+                            }}
+                            id="outlined-basic" label="Search" variant="outlined" value={searchTerm}
+                            onChange={handleSearch}/>
 
 
-            <TableContainer component={Paper} sx={tableContainerSX}>
-                <Table sx={{minWidth: 650}} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center" onClick={() => handleSort('name')}>
+                        <TableContainer component={Paper} sx={tableContainerSX}>
+                            <Table sx={{minWidth: 650}} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center" onClick={() => handleSort('name')}>
                                 <span style={{cursor: 'pointer'}}>
                                 Name {getSortIcon('name')}
                                 </span>
 
 
-                            </TableCell>
-                            <TableCell align="center">Image</TableCell>
-                            <TableCell align="center" onClick={() => handleSort('date')}>
+                                        </TableCell>
+                                        <TableCell align="center">Image</TableCell>
+                                        <TableCell align="center" onClick={() => handleSort('date')}>
                                 <span style={{cursor: 'pointer'}}>
                                 Date {getSortIcon('date')}
                                 </span>
-                            </TableCell>
-                            <TableCell align="center" onClick={() => handleSort('generalBids')}>
+                                        </TableCell>
+                                        <TableCell align="center" onClick={() => handleSort('generalBids')}>
                                 <span style={{cursor: 'pointer'}}>
                                 General bids {getSortIcon('generalBids')}
                                 </span>
-                            </TableCell>
-                            {!user.admin && <TableCell align="right" onClick={() => handleSort('myBids')}>
+                                        </TableCell>
+                                        {!user.admin && <TableCell align="right" onClick={() => handleSort('myBids')}>
                                 <span style={{cursor: 'pointer'}}>
                                 My bids {getSortIcon('myBids')}
                                 </span>
-                            </TableCell>}
+                                        </TableCell>}
 
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <TableRow key={randomUniqKey()} component={Link} to={`/product/${row.id}`} className="table-row">
-                                <TableCell align="center">{row.name}</TableCell>
-                                <TableCell align="center"><img style={{maxWidth: '100px', maxHeight: '100px'}}
-                                                               src={row.linkImage} alt={"green iguana"}/></TableCell>
-                                <TableCell align="center">{row.date}</TableCell>
-                                <TableCell align="center">{row.generalBids}</TableCell>
-                                {!user.admin && <TableCell align="right">{row.myBids}</TableCell>}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                                        <TableRow key={randomUniqKey()} component={Link} to={`/product/${row.id}`}
+                                                  className="table-row">
+                                            <TableCell align="center">{row.name}</TableCell>
+                                            <TableCell align="center"><img style={{maxWidth: '100px', maxHeight: '100px'}}
+                                                                           src={row.linkImage}
+                                                                           alt={"green iguana"}/></TableCell>
+                                            <TableCell align="center">{row.date}</TableCell>
+                                            <TableCell align="center">{row.generalBids}</TableCell>
+                                            {!user.admin && <TableCell align="right">{row.myBids}</TableCell>}
 
-                            </TableRow>))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={rowsPerPageOptions}
-                component="div"
-                count={filteredProducts.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+                                        </TableRow>))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={rowsPerPageOptions}
+                            component="div"
+                            count={filteredProducts.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </>
+                    : <Alert sx={{marginTop: 10}} severity="warning">No products open</Alert>
+
+
+            }
+
         </>)
 };
 

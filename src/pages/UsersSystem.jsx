@@ -3,16 +3,14 @@ import {Cookies} from 'react-cookie';
 import {useNavigate, Link} from "react-router-dom";
 import config from "../config.json";
 import {
-    IconButton,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, Tooltip, TablePagination, TextField
+    TableRow, TablePagination
 } from "@mui/material";
-import StyledButton from "../components/Styled/StyledButton";
 import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 
 import {randomUniqKey} from "../utilities/utilities"
@@ -23,7 +21,6 @@ const UsersSystem = (props) => {
     const rowsPerPageOptions = [5, 10, 25]; // Options for rows per page dropdown
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
-    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
