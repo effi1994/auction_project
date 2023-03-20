@@ -14,12 +14,13 @@ import {useNavigate} from "react-router-dom";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {useState} from "react";
 import {signUp} from '../services/userAtuhService';
-import {globalStyle, boxSX} from "./Styled/ConstantsStyle";
+import {globalStyle, boxSX, boxSignUpSX} from "./Styled/ConstantsStyle";
 import {errorMessage} from "../services/ErrorMessageService";
 
 const SignUpFrom = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const  [showVerifyPassword, setShowVerifyPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [verifyPassword, setVerifyPassword] = useState('');
     const navigate = useNavigate();
@@ -32,6 +33,14 @@ const SignUpFrom = (props) => {
         event.preventDefault();
 
     }
+    const handleClickShowVerifyPassword = () => {
+        setShowVerifyPassword(!showVerifyPassword);
+    }
+
+    const handleMouseDownVerifyPassword = (event) => {
+        event.preventDefault();
+    }
+
 
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
@@ -70,7 +79,7 @@ const SignUpFrom = (props) => {
     return (
         <div
             style={{
-                height: "100vh",
+                height: "50vh",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center"
@@ -90,9 +99,8 @@ const SignUpFrom = (props) => {
                 </Button>
                 <Box display={"flex"}
                      flexDirection={"column"}
-
-                     maxWidth={400}
-                     sx={boxSX}
+                     maxWidth={800}
+                     sx={boxSignUpSX}
                 >
                     <Typography variant={"h4"}>Sign Up</Typography>
                     <TextField
@@ -124,7 +132,7 @@ const SignUpFrom = (props) => {
                     />
                     <TextField
                         label={"Verify Password"}
-                        type={showPassword ? 'text' : 'password'}
+                        type={showVerifyPassword ? 'text' : 'password'}
                         value={verifyPassword}
                         onChange={handleVerifyPasswordChange}
                         sx={{marginTop: 2}}
@@ -133,11 +141,11 @@ const SignUpFrom = (props) => {
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
+                                        onClick={handleClickShowVerifyPassword}
+                                        onMouseDown={handleMouseDownVerifyPassword}
                                         edge="end"
                                     >
-                                        {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                        {showVerifyPassword ? <VisibilityOff/> : <Visibility/>}
                                     </IconButton>
                                 </InputAdornment>
                             )

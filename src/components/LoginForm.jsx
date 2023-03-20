@@ -5,13 +5,15 @@ import {
     IconButton,
     InputAdornment,
     TextField, Tooltip,
-    Typography
+    Typography, Grid
+
 } from "@mui/material";
+
 
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import React, {useState} from "react";
 import {login} from '../services/userAtuhService';
-import {globalStyle, boxSX} from "./Styled/ConstantsStyle"
+import {globalStyle, boxSX, statisticStyleBoxSX} from "./Styled/ConstantsStyle"
 import {useNavigate} from "react-router-dom";
 
 
@@ -60,28 +62,56 @@ const LoginForm = (props) => {
     return (
         <div>
 
-            <form style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                <h1 style={{marginBottom: "30px"}}>System Statistics</h1>
-                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of users:</label>
-                    <span>{props.statists.numUsers}</span>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of open tenders:</label>
-                    <span>{props.statists.numOpenTenders}</span>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of closed tenders:</label>
-                    <span>{props.statists.numClosedTenders}</span>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of open bids:</label>
-                    <span>{props.statists.numOpenBids}</span>
-                </div>
-                <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
-                    <label style={{fontWeight: "bold", marginBottom: "10px"}}>Number of closed bids:</label>
-                    <span>{props.statists.numClosedBids}</span>
-                </div>
+            <form>
+                <Box
+                    display={"flex"}
+                    flexDirection={"column"}
+                    maxWidth={800}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    margin={"auto"}
+                    marginTop={5}
+                    padding={3}
+                    borderRadius={3}
+                    boxShadow={'5px 5px 10px #ccc'}
+                    sx={statisticStyleBoxSX}
+                >
+                    <Typography variant="h1" style={{ marginBottom: "30px" }}>
+                        System Statistics
+                    </Typography>
+                    <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+                                Number of users:
+                            </Typography>
+                            <Typography>{props.statists.numUsers}</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+                                Number of open tenders:
+                            </Typography>
+                            <Typography>{props.statists.numOpenTenders}</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+                                Number of closed tenders:
+                            </Typography>
+                            <Typography>{props.statists.numClosedTenders}</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+                                Number of open bids:
+                            </Typography>
+                            <Typography>{props.statists.numOpenBids}</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+                                Number of closed bids:
+                            </Typography>
+                            <Typography>{props.statists.numClosedBids}</Typography>
+                        </Grid>
+                    </Grid>
+                </Box>
             </form>
 
 

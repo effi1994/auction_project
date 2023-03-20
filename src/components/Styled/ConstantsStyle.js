@@ -26,11 +26,25 @@ export  const globalStyle = {
 };
 
 export const boxSX={
+
     transition: "0.2s ease-in",
     ":hover": {
         boxShadow: '5px 5px 20px #ccc'
     }
 }
+
+export const boxSignUpSX = {
+    padding: 3,
+    borderRadius: 5,
+    boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+    backgroundColor: "#F9F9F9"
+
+};
+
+export const statisticStyleBoxSX = {
+    background: "linear-gradient(to right, #f6d365 0%, #fda085 51%, #f6d365 100%)"
+}
+
 
 
 
