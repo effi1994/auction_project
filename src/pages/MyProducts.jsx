@@ -70,10 +70,6 @@ const MyProducts = (props) => {
         }
     }
 
-
-    //id: 82, name: 'aple', bidMax: 0, openToAction: true
-    // openToAction = true => open  color: green  text: Open  openToAction= false => close  color: red  text: Close
-
     return (<div>
 
             {myProducts.length > 0 ? <>
@@ -149,7 +145,9 @@ const MyProducts = (props) => {
                     />
                 </>
                 :
-                <Alert sx={{marginTop: 10}} severity="warning">You have no products yet</Alert>
+                <Alert sx={{marginTop: 10}} severity="warning">
+                    <strong>You have no products yet</strong>
+                </Alert>
             }
         </div>
 

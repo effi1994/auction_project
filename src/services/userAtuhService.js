@@ -1,4 +1,4 @@
-import {sendApiGetRequest, sendApiPostRequest} from "./ApiRequests";
+import {sendApiPostRequest} from "./ApiRequests";
 import {Cookies} from 'react-cookie';
 import {toast} from 'react-toastify';
 import config from "../config.json";
@@ -9,14 +9,12 @@ let urlApi = config.apiUrl;
 const cookies = new Cookies();
 
 
-
 export const login = (username, password, callback) => {
     sendApiPostRequest(urlApi + "/login", {
         username,
         password
     }, (response) => {
         if (response.data.success) {
-            //user = response.data.userObject;
             toast.success("login successfully", {
                 position: "top-center",
                 autoClose: 2000,
@@ -28,9 +26,7 @@ export const login = (username, password, callback) => {
                 theme: "colored",
             });
             callback("/");
-
             cookies.set(config.tokenKey, response.data.token, {path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24)});
-            //callback(user.token);
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);
@@ -95,11 +91,9 @@ export const signUp = (username, password, callback) => {
 };
 
 export const getCredits = (token,callback) => {
-
     if (token === undefined) {
         return;
     }
-
     sendApiPostRequest(urlApi + "/get-credit", {token}, (response) => {
         if (response.data.success) {
             callback(response.data.creditManagement.creditAmount);

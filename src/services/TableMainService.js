@@ -1,4 +1,4 @@
-import {sendApiGetRequest, sendApiPostRequest} from "./ApiRequests";
+import {sendApiPostRequest} from "./ApiRequests";
 import config from "../config.json";
 import {errorMessage} from "./ErrorMessageService";
 

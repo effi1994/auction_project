@@ -1,5 +1,4 @@
-import {sendApiGetRequest, sendApiPostRequest} from "./ApiRequests";
-import {Cookies} from 'react-cookie';
+import { sendApiPostRequest} from "./ApiRequests";
 import {toast} from 'react-toastify';
 import config from "../config.json";
 import {errorMessage} from "./ErrorMessageService";

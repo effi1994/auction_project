@@ -7,12 +7,11 @@ import {addProduct} from "../services/ProductService";
 import {
     Box,
     InputAdornment,
-    TextField, Tooltip,
+    TextField
 } from "@mui/material";
 
 import {styled} from '@mui/material/styles';
 
-// Styles for the modal and its contents
 const StyledModal = styled(Modal)({
     display: 'flex',
     alignItems: 'center',
@@ -43,7 +42,7 @@ const AddProductModal = (props) => {
     const [minPrice, setMinPrice] = useState('');
     const navigate = useNavigate();
 
-    const handleOpen = () => props.setOpen(true);
+
     const handleClose = () => {
         setName('');
         setDescription('');
@@ -52,17 +51,7 @@ const AddProductModal = (props) => {
         props.setOpen(false)
     };
 
-    const handleNameChange = (e) => {
-        setName(e.target.value);
-    }
 
-    const handleDescriptionChange = (e) => {
-        setDescription(e.target.value);
-    }
-
-    const handleImageLinkChange = (e) => {
-        setImageLink(e.target.value);
-    }
 
     const handleMinPriceChange = (e) => {
         let isNum = /^\d+$/.test(e.target.value);
@@ -80,7 +69,7 @@ const AddProductModal = (props) => {
         e.preventDefault();
         const token = getToken();
         if (token) {
-            addProduct(token, name, description, imageLink, minPrice, handleClose, navigate);
+            addProduct(token, name, description, imageLink, minPrice, handleClose);
         }
 
     }

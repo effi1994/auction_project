@@ -1,4 +1,4 @@
-import {sendApiGetRequest, sendApiPostRequest} from "./ApiRequests";
+import {sendApiPostRequest} from "./ApiRequests";
 import {toast} from 'react-toastify';
 import config from "../config.json";
 import {errorMessage} from "./ErrorMessageService";
@@ -28,7 +28,7 @@ export const getProduct = (token, productId, callback,callback2) => {
     })
 }
 
-export const addProduct = (token, name, description, imageLink, minPrice,callback,callback2) => {
+export const addProduct = (token, name, description, imageLink, minPrice,callback) => {
     let openToAction =true;
     sendApiPostRequest(urlApi + "/add-product",
         {token,
@@ -49,7 +49,6 @@ export const addProduct = (token, name, description, imageLink, minPrice,callbac
                 theme: "colored",
             });
             callback();
-            //callback2("/");
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);

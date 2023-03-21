@@ -12,7 +12,6 @@ import {
     InputAdornment
 } from "@mui/material";
 
-import {boxSX} from "../components/Styled/ConstantsStyle"
 import {getUserDetails, updateCreditsUser} from "../services/ManageService";
 
 
@@ -48,8 +47,30 @@ const UserDetails = () => {
 
 
     return (
-        <div>
-            <Box sx={boxSX}>
+        <div  style={
+            {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "71vh",
+            }
+        }>
+            <Box
+                sx={{
+                    width: "100%",
+                    maxWidth: 800,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "20px",
+                    margin: "20px",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                    boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
+
+                }}
+            >
                 <Typography variant="h4" component="h1" gutterBottom>
                     User Details
                 </Typography>

@@ -81,12 +81,6 @@ const MyBids = (props) => {
         }
     }
 
-
-    //{id: 21, name: 'all', bid: 100, openToAction: true, isWinner: 3}
-    //isWinner: 3  - NO RESULT, 2 - LOSS, 1 - winner
-    // isWinner: 3 -> color: #FFC107  isWinner: 2 -> color: #FF0000  isWinner: 1 -> color: #00FF00
-    // openToAction = true => open  color: green  text: Open  openToAction= false => close  color: red  text: Close
-
     return (
         <div>
 
@@ -176,7 +170,9 @@ const MyBids = (props) => {
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
 
-                    </> : <Alert sx={{marginTop: 10}} severity="warning">You have no bids</Alert>
+                    </> : <Alert sx={{marginTop: 10}} severity="warning">
+                        <strong>You have no bids</strong>
+                        </Alert>
             }
 
 

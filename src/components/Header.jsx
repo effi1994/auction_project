@@ -9,24 +9,12 @@ import {buttonSX} from "./Styled/ConstantsStyle";
 
 const Header = (props) => {
     const credit = props.credit;
-    const location = useLocation();
-
-
-
-
-
     const navigate = useNavigate();
     const handleLogout = () => {
         logout(navigate);
         window.location.reload();
 
     }
-
-
-
-
-
-
 
     return (
         <>

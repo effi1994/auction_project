@@ -40,17 +40,10 @@ const AppContainer = () => {
             const interval = setInterval(() => {
                 let token = getToken();
                 getCredits(token,setCredit);
-                //setToken(getToken());
             }, 1000);
             return () => clearInterval(interval);
 
-        }else {
-
         }
-
-
-
-
     })
 
     const handleToken = (token) => {

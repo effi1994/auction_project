@@ -9,12 +9,16 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, TablePagination, TextField
+    TableRow, TablePagination, TextField,
+    Alert
 } from "@mui/material";
 import {tableContainerSX} from "../components/Styled/ConstantsStyle";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 import {randomUniqKey} from "../utilities/utilities"
 import {getAllUsers} from "../services/ManageService";
+import './css/table.css';
 
 const UsersSystem = (props) => {
     const [users, setUsers] = useState([]);
@@ -24,7 +28,8 @@ const UsersSystem = (props) => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
-
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortField, setSortField] = useState('username');
 
 
     useEffect(() => {
@@ -33,7 +38,7 @@ const UsersSystem = (props) => {
         const admin = cookies.get(config.tokenKeyAdmin);
 
         if (admin === 'true') {
-            getAllUsers(token, setUsers,setFilteredUsers);
+            getAllUsers(token, setUsers, setFilteredUsers);
         } else {
             navigate('/');
         }
@@ -53,66 +58,118 @@ const UsersSystem = (props) => {
         setFilteredUsers(filteredUsers);
     }
 
-    //id: 6, username: 'effi26@'
+    const handleSort = (column) => {
+        const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortOrder(newSortOrder);
+        setSortField(column);
+        const sortedUsers = [...filteredUsers].sort((a, b) => {
+                if (a[column] < b[column]) {
+                    return newSortOrder === 'asc' ? -1 : 1;
+                }
+                if (a[column] > b[column]) {
+                    return newSortOrder === 'asc' ? 1 : -1;
+                }
+                return 0;
+            }
+        );
+        setFilteredUsers(sortedUsers);
+    };
+
+
+    const getSortIcon = (field) => {
+        if (sortField !== field) {
+            return null;
+        } else if (sortOrder === 'asc') {
+            return <ArrowUpwardIcon/>;
+        } else {
+            return <ArrowDownwardIcon/>;
+        }
+    }
+
 
     return (
         <div>
-            <h1>Users System</h1>
-            <TextField
-                sx={{
-                    margin: "5px",
-                    width: "300px",
-                    height: "50px",
-                    borderRadius: "10px",
-                    backgroundColor: "white",
-                    padding: "0px",
-                    fontSize: "16px",
-                    position: "relative",
-                    left: "120px;",
-                    top: "10px",
-                    transform: "translateX(-50%)"
-                }}
-                id="outlined-basic" label="Search" variant="outlined" value={searchTerm}
-                onChange={handleSearchUsers}/>
+            {
+                users.length > 0 ? <>
+                    <h2
+                        style={{
+                            textAlign: 'center',
+                            color: '#3f51b5',
+                            fontWeight: 'bold',
+                            fontSize: '30px',
+                            marginTop: '20px',
+                            marginBottom: '20px',
+                            fontFamily: 'sans-serif',
+                            textTransform: 'uppercase',
+                            letterSpacing: '2px',
+                            textDecoration: 'underline',
+                            textDecorationColor: '#0335fc',
+                            textDecorationThickness: '3px',
+                            textDecorationStyle: 'double',
+                            textUnderlineOffset: '10px',
+                            textShadow: '2px 2px 2px #3f51b5',
+                        }}
 
-            <TableContainer component={Paper} sx={tableContainerSX}>
-                <Table sx={{minWidth: 650}} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center"></TableCell>
-                            <TableCell align="center">Username</TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, i) => (
-                            <TableRow
-                                key={randomUniqKey()}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                            >
-                                <TableCell align={"center"}>
-                                    {i + 1}
-                                </TableCell>
-                                <TableCell align="center">
-                                    <Link to={`/user/${user.id}`}>
-                                        {user.username}
-                                    </Link>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={rowsPerPageOptions}
-                component="div"
-                count={users.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+                    >Users System</h2>
+                    <TextField
+                        sx={{
+                            margin: "5px",
+                            width: "300px",
+                            height: "50px",
+                            borderRadius: "10px",
+                            backgroundColor: "white",
+                            padding: "0px",
+                            fontSize: "16px",
+                            position: "relative",
+                            left: "120px;",
+                            top: "10px",
+                            transform: "translateX(-50%)"
+                        }}
+                        id="outlined-basic" label="Search" variant="outlined" value={searchTerm}
+                        onChange={handleSearchUsers}/>
+
+                    <TableContainer component={Paper} sx={tableContainerSX}>
+                        <Table sx={{minWidth: 650}} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="left" onClick={() => handleSort('username')}>
+                                 <span style={{cursor: 'pointer'}}>
+                                Username{getSortIcon('username')}
+                                </span>
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, i) => (
+                                    <TableRow
+                                        className={"table-row"}
+                                        key={randomUniqKey()}
+                                        sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                        component={Link} to={`/user/${user.id}`}
+                                    >
+                                        <TableCell align="left">
+                                            {user.username}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={rowsPerPageOptions}
+                        component="div"
+                        count={filteredUsers.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </> : <Alert sx={{marginTop: 10}} severity="warning">
+                    <strong>There are no users in the system!</strong>
+                    </Alert>
+            }
+
+
         </div>
 
 

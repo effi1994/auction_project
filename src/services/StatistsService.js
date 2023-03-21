@@ -1,5 +1,4 @@
-import {sendApiGetRequest, sendApiPostRequest,sendApiPostRequestWithBody} from "./ApiRequests";
-import {toast } from 'react-toastify';
+import {sendApiGetRequest} from "./ApiRequests";
 
 import config from "../config.json";
 export let urlApi= config.apiUrl;

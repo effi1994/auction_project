@@ -237,7 +237,6 @@ const HomeTable = (props) => {
     return (
 
         <>
-
             {!user.admin && <StyledButton
                 variant="contained"
                 sx={{
@@ -341,7 +340,9 @@ const HomeTable = (props) => {
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                     </>
-                    : <Alert sx={{marginTop: 10}} severity="warning">No products open</Alert>
+                    : <Alert sx={{marginTop: 10}} severity="warning">
+                        <strong>No products open</strong>
+                        </Alert>
 
 
             }
