@@ -20,6 +20,8 @@ import {
 import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 import StyledButton from "../components/Styled/StyledButton";
 import {randomUniqKey} from "../utilities/utilities"
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 
 function Product() {
@@ -29,9 +31,11 @@ function Product() {
     const [myBids, setMyBids] = useState([]);
     const [isAdmin, setIsAdmin] = useState(false);
     const [user, setUser] = useState({});
-    const rowsPerPageOptions = [5, 10, 25]; // Options for rows per page dropdown
+    const rowsPerPageOptions = [5, 10, 25];
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortField, setSortField] = useState('userBid');
     const cookies = new Cookies();
     const navigate = useNavigate();
     useEffect(() => {
@@ -80,57 +84,77 @@ function Product() {
 
     }
 
+    const handleSort = (column) => {
+        const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortOrder(newSortOrder);
+        setSortField(column);
+        const sortedMyBids = [...myBids].sort((a, b) => {
+                if (a[column] < b[column]) {
+                    return newSortOrder === 'asc' ? -1 : 1;
+                } else if (a[column] > b[column]) {
+                    return newSortOrder === 'asc' ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            }
+        );
+        setMyBids(sortedMyBids);
+    };
+
+
+    const getSortIcon = (field) => {
+        if (sortField !== field) {
+            return null;
+        } else if (sortOrder === 'asc') {
+            return <ArrowUpwardIcon/>;
+        } else {
+            return <ArrowDownwardIcon/>;
+        }
+    }
+
+
+
 
     const productImage = product.imageLink;
     return (
         <div>
-            <h1>Product</h1>
-            <form>
-                <div>
-                    <label>Product Name: {product.productName}</label>
-                </div>
-                <div>
-                    <label>Product Description: {product.content}</label>
-                </div>
 
+            <form style={{backgroundColor: '#f2f2f2', padding: '20px'}}>
+                <h1 style={{fontSize: '24px', fontWeight: 'bold'}}>Product</h1>
                 <div>
-                    <label>Product Image: </label>
+                    <label style={{display: 'block', marginBottom: '10px'}}>Product Name: {product.productName}</label>
+                </div>
+                <div>
+                    <label style={{display: 'block', marginBottom: '10px'}}>Product Description: {product.content}</label>
+                </div>
+                <div>
+                    <label style={{display: 'block', marginBottom: '10px'}}>Product Image:</label>
                     <br/>
                     <img style={{maxWidth: '100px', maxHeight: '100px'}} src={productImage} alt={"green iguana"}/>
                 </div>
-
                 <div>
-                    <label>Publish Date: {product.publishDate}</label>
+                    <label style={{display: 'block', marginBottom: '10px'}}>Publish Date: {product.publishDate}</label>
                 </div>
-
                 <div>
-                    <label>Product Owner: {product.username}</label>
+                    <label style={{display: 'block', marginBottom: '10px'}}>Product Owner: {product.username}</label>
                 </div>
-
                 <div>
-                    <label>Minimum Price: {product.minimumPrice}$</label>
+                    <label style={{display: 'block', marginBottom: '10px'}}>Minimum Price: {product.minimumPrice}$</label>
                 </div>
-
                 <div>
-                    <label>Number of Open Bids: {product.numOpenBids}</label>
-
-
+                    <label style={{display: 'block', marginBottom: '10px'}}>Number of Open Bids: {product.numOpenBids}</label>
                 </div>
-
-                {
-                    user.id === product.publishUserId && product.openToAction === true && !isAdmin &&
-
-                    <div>
+                {user.id === product.publishUserId && product.openToAction === true && !isAdmin &&
+                    <div style={{marginTop: '20px'}}>
                         <Button
                             variant="contained"
                             onClick={closeAction}
+                            style={{backgroundColor: '#4CAF50', color: 'white', padding: '10px', borderRadius: '5px'}}
                         >
                             Close Auction
                         </Button>
                     </div>
-
                 }
-
             </form>
 
             {
@@ -199,7 +223,9 @@ function Product() {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell></TableCell>
-                                            <TableCell align="center">Bid Price</TableCell>
+                                            <TableCell align="center"  onClick={() => handleSort('userBid')}>
+                                                <span style={{cursor: 'pointer'}}>Bid Price {getSortIcon('userBid')} </span>
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
 
