@@ -7,24 +7,12 @@ import StyledButton from "../components/Styled/StyledButton";
 import {useNavigate} from "react-router-dom";
 import {
     Box,
-    Button,
-    GlobalStyles,
-    IconButton,
-    InputAdornment,
-    TextField, Tooltip,
+    TextField,
     Typography,
-    CardMedia, InputLabel, Select, MenuItem,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow, TablePagination, Paper
+    InputAdornment
 } from "@mui/material";
-import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 
-import {globalStyle, boxSX} from "../components/Styled/ConstantsStyle"
-import {FormLabel, FormControlLabel} from '@mui/material';
+import {boxSX} from "../components/Styled/ConstantsStyle"
 import {getUserDetails, updateCreditsUser} from "../services/ManageService";
 
 
@@ -81,6 +69,9 @@ const UserDetails = () => {
                         id="credits"
                         value={credits}
                         onChange={handleChange}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">$</InputAdornment>,
+                        }}
                         type="number"
                         fullWidth
 

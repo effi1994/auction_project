@@ -7,14 +7,9 @@ import {useNavigate} from "react-router-dom";
 import {getProduct, closeProduct} from "../services/ProductService";
 import {addBid} from "../services/BidService";
 import {
-    Box,
     Button,
-    GlobalStyles,
-    IconButton,
     InputAdornment,
-    TextField, Tooltip,
-    Typography,
-    CardMedia, InputLabel, Select, MenuItem,
+    TextField,
     Table,
     TableBody,
     TableCell,
@@ -23,9 +18,6 @@ import {
     TableRow, TablePagination, Paper
 } from "@mui/material";
 import {tableContainerSX} from "../components/Styled/ConstantsStyle";
-
-import {globalStyle, boxSX} from "../components/Styled/ConstantsStyle"
-import {FormLabel, FormControlLabel} from '@mui/material';
 import StyledButton from "../components/Styled/StyledButton";
 import {randomUniqKey} from "../utilities/utilities"
 
@@ -126,7 +118,7 @@ function Product() {
                 </div>
 
                 {
-                    user.id === product.publishUserId && product.openToAction == true && !isAdmin &&
+                    user.id === product.publishUserId && product.openToAction === true && !isAdmin &&
 
                     <div>
                         <Button
@@ -142,10 +134,10 @@ function Product() {
             </form>
 
             {
-                product.openToAction == true && user.id !== product.publishUserId && !isAdmin &&
+                product.openToAction === true && user.id !== product.publishUserId && !isAdmin &&
 
                 <>
-                    <h1>My Bids</h1>
+                    <br/>
                     <TextField
                         id="outlined-basic"
                         label="Bid Price"
@@ -153,7 +145,9 @@ function Product() {
                         value={bid}
                         onChange={handleBid}
                         sx={{
-                            margin: "10px"
+                            position: "relative",
+                            left: "-381px",
+                            top: "67px"
                         }}
                         InputProps={{
                             endAdornment: <InputAdornment position="end">$</InputAdornment>,
@@ -164,8 +158,9 @@ function Product() {
                     <StyledButton
                         variant="contained"
                         sx={{
-                            margin: "10px"
-
+                            position: "relative",
+                            left: "-346px",
+                            top: "78px"
                         }}
                         text={"Add Bid"}
                         icon={"+"}
@@ -179,6 +174,26 @@ function Product() {
 
                         myBids && myBids.length > 0 &&
                         <div>
+                            <h2
+                                style={{
+                                    textAlign: 'center',
+                                    color: '#3f51b5',
+                                    fontWeight: 'bold',
+                                    fontSize: '30px',
+                                    marginTop: '20px',
+                                    marginBottom: '20px',
+                                    fontFamily: 'sans-serif',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '2px',
+                                    textDecoration: 'underline',
+                                    textDecorationColor: '#0335fc',
+                                    textDecorationThickness: '3px',
+                                    textDecorationStyle: 'double',
+                                    textUnderlineOffset: '10px',
+                                    textShadow: '2px 2px 2px #3f51b5',
+                                }}
+
+                            >My Bids</h2>
                             <TableContainer TableContainer component={Paper} sx={tableContainerSX}>
                                 <Table sx={{minWidth: 650}} aria-label="simple table">
                                     <TableHead>
@@ -197,7 +212,7 @@ function Product() {
                                                 <TableCell component="th" scope="row">
                                                     {i + 1}
                                                 </TableCell>
-                                                <TableCell align="center">{row.userBid}</TableCell>
+                                                <TableCell align="center">{row.userBid}$</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

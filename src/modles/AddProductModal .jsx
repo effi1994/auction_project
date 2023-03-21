@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import {useNavigate} from 'react-router-dom';
 import StyledButton from "../components/Styled/StyledButton";
 import {getToken} from "../services/userAtuhService";
 import {addProduct} from "../services/ProductService";
+import {
+    Box,
+    InputAdornment,
+    TextField, Tooltip,
+} from "@mui/material";
 
 import {styled} from '@mui/material/styles';
 
@@ -65,7 +68,8 @@ const AddProductModal = (props) => {
         let isNum = /^\d+$/.test(e.target.value);
         if (isNum) {
             setMinPrice(e.target.value);
-        } if (e.target.value === '') {
+        }
+        if (e.target.value === '') {
             setMinPrice(e.target.value);
         }
 
@@ -82,7 +86,7 @@ const AddProductModal = (props) => {
     }
 
     const checkIfEmpty = name === '' || description === '' || imageLink === '' || minPrice === '';
-    const checkMinPrice =Number(minPrice) < 1;
+    const checkMinPrice = Number(minPrice) < 1;
 
     return (
         <>
@@ -127,7 +131,14 @@ const AddProductModal = (props) => {
                             value={minPrice}
                             onChange={handleMinPriceChange}
                             type="number"
-                            InputProps={{inputProps: {min: 1}}}
+
+                            InputProps={{
+                                inputProps: {
+                                    min: 1
+                                },
+                                endAdornment: <InputAdornment position="end">$</InputAdornment>,
+                            }
+                            }
                             required
                             fullWidth
                         />

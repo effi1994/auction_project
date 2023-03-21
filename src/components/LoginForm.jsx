@@ -70,9 +70,9 @@ const LoginForm = (props) => {
                     alignItems={"center"}
                     justifyContent={"center"}
                     margin={"auto"}
-                    marginTop={5}
-                    padding={3}
-                    borderRadius={3}
+                    marginTop={"5px"}
+                    padding={"0px"}
+                    borderRadius={"12px"}
                     boxShadow={'5px 5px 10px #ccc'}
                     sx={statisticStyleBoxSX}
                 >
