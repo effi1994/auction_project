@@ -12,8 +12,6 @@ const Header = (props) => {
     const navigate = useNavigate();
     const handleLogout = () => {
         logout(navigate);
-        window.location.reload();
-
     }
 
     return (

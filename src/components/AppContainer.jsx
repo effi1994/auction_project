@@ -32,12 +32,10 @@ const AppContainer = () => {
     let location = useLocation();
     const [token, setToken] = useState(null);
     const [credit, setCredit] = useState(0);
-    const [admin, setAdmin] = useState(false);
     const cookies = new Cookies();
-
     useEffect( () => {
         if (getToken()){
-            setAdmin(cookies.get(config.tokenKeyAdmin));
+
             const interval = setInterval(() => {
                 let token = getToken();
                 getCredits(token,setCredit);
@@ -57,7 +55,7 @@ const AppContainer = () => {
                 getToken() &&
                 <Header path={location.pathname} token={token} credit={credit}
                         links={
-                            admin === 'true' ? linksAdmin : linksUser
+                            cookies.get(config.tokenKeyAdmin) === 'true' ? linksAdmin : linksUser
                         }/>
             }
 
