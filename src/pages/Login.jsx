@@ -20,13 +20,15 @@ const Login = (props) => {
             navigate('/');
 
         }else {
-            getStatist(setStatist)
-
+            const interval = setInterval(() => {
+                getStatist(setStatist)
+            }, 1000);
+            return () => clearInterval(interval);
         }
 
 
 
-    },)
+    },[])
 
 
     return (

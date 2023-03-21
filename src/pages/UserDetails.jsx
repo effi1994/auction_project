@@ -14,7 +14,6 @@ import {
 
 import {getUserDetails, updateCreditsUser} from "../services/ManageService";
 
-
 const UserDetails = () => {
     const {id} = useParams();
     const [user, setUser] = useState({});

@@ -28,8 +28,6 @@ export const login = (username, password, callback) => {
             cookies.set(config.tokenKey, response.data.token, {path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24)});
             cookies.set(config.tokenKeyAdmin, response.data.admin, {path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24)});
             callback("/");
-
-
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);
