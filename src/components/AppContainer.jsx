@@ -25,7 +25,6 @@ const linksUser = [
 const linksAdmin = [
     {titlePage: "Home", path: "/"},
     {titlePage: "Users", path: "/users"},
-
 ];
 
 const AppContainer = () => {
@@ -33,10 +32,12 @@ const AppContainer = () => {
     let location = useLocation();
     const [token, setToken] = useState(null);
     const [credit, setCredit] = useState(0);
+    const [admin, setAdmin] = useState(false);
     const cookies = new Cookies();
-    const admin = cookies.get(config.tokenKeyAdmin);
+
     useEffect( () => {
         if (getToken()){
+            setAdmin(cookies.get(config.tokenKeyAdmin));
             const interval = setInterval(() => {
                 let token = getToken();
                 getCredits(token,setCredit);
@@ -44,7 +45,7 @@ const AppContainer = () => {
             return () => clearInterval(interval);
 
         }
-    })
+    },[])
 
     const handleToken = (token) => {
         setToken(token);

@@ -13,7 +13,6 @@ const Login = (props) => {
 
 
 
-
     useEffect(() => {
       const cookies = new Cookies();
       const token = cookies.get(config.tokenKey);
@@ -27,19 +26,7 @@ const Login = (props) => {
 
 
 
-    },[])
-
-    useEffect(() => {
-        const eventSource = new EventSource(urlApi+"/sse-statist");
-        eventSource.onmessage = event => {
-            const newStats = JSON.parse(event.data);
-            setStatist(newStats.statistics);
-        };
-        return () => {
-            eventSource.close();
-        };
-    }, [])
-
+    },)
 
 
     return (

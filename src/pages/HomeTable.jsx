@@ -55,7 +55,7 @@ const HomeTable = (props) => {
         }
 
 
-    }, []);
+    },[]);
 
 
     useEffect(() => {
@@ -109,7 +109,6 @@ const HomeTable = (props) => {
                     newFilteredProducts.splice(index, 1);
                     return newFilteredProducts;
                 })
-                console.log(updateTable);
                 if (updateTable.bidToken === getToken()) {
                     toast.success(`Product ${updateTable.name} sell to ${updateTable.usernameWinnerOrBidder}`, {
                         position: "top-center",
@@ -145,6 +144,7 @@ const HomeTable = (props) => {
                     newFilteredProducts[index] = updateTable;
                     return newFilteredProducts;
                 })
+                console.log(filteredProducts);
 
                 if (updateTable.publishToken === getToken()) {
                     toast.success(`bid ${updateTable.name} by ${updateTable.usernameWinnerOrBidder}`, {
