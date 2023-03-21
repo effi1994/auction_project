@@ -7,10 +7,11 @@ import {errorMessage} from "./ErrorMessageService";
 let urlApi = config.apiUrl;
 
 
-export const getAllUsers = (token, callback) => {
+export const getAllUsers = (token, callback,callback2) => {
     sendApiPostRequest(urlApi + "/get-all-users", {token}, (response) => {
         if (response.data.success) {
             callback(response.data.users);
+            callback2(response.data.users);
         } else {
             let errorCode = response.data.errorCode;
             errorMessage(errorCode);

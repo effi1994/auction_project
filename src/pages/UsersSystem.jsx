@@ -9,7 +9,7 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, TablePagination
+    TableRow, TablePagination, TextField
 } from "@mui/material";
 import {tableContainerSX} from "../components/Styled/ConstantsStyle";
 
@@ -22,6 +22,10 @@ const UsersSystem = (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredUsers, setFilteredUsers] = useState([]);
+
+
 
     useEffect(() => {
         const cookies = new Cookies();
@@ -29,7 +33,7 @@ const UsersSystem = (props) => {
         const admin = cookies.get(config.tokenKeyAdmin);
 
         if (admin === 'true') {
-            getAllUsers(token, setUsers);
+            getAllUsers(token, setUsers,setFilteredUsers);
         } else {
             navigate('/');
         }
@@ -43,12 +47,34 @@ const UsersSystem = (props) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     }
+    const handleSearchUsers = (event) => {
+        setSearchTerm(event.target.value);
+        const filteredUsers = [...users.filter(user => user.username.toLowerCase().includes(event.target.value.toLowerCase()))];
+        setFilteredUsers(filteredUsers);
+    }
 
     //id: 6, username: 'effi26@'
 
     return (
         <div>
             <h1>Users System</h1>
+            <TextField
+                sx={{
+                    margin: "5px",
+                    width: "300px",
+                    height: "50px",
+                    borderRadius: "10px",
+                    backgroundColor: "white",
+                    padding: "0px",
+                    fontSize: "16px",
+                    position: "relative",
+                    left: "120px;",
+                    top: "10px",
+                    transform: "translateX(-50%)"
+                }}
+                id="outlined-basic" label="Search" variant="outlined" value={searchTerm}
+                onChange={handleSearchUsers}/>
+
             <TableContainer component={Paper} sx={tableContainerSX}>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
                     <TableHead>
@@ -60,7 +86,7 @@ const UsersSystem = (props) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, i) => (
+                        {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, i) => (
                             <TableRow
                                 key={randomUniqKey()}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
