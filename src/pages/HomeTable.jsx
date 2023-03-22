@@ -147,7 +147,7 @@ const HomeTable = (props) => {
                 console.log(filteredProducts);
 
                 if (updateTable.publishToken === getToken()) {
-                    toast.success(`bid ${updateTable.name} by ${updateTable.usernameWinnerOrBidder}`, {
+                    toast.success(`Bid product: ${updateTable.name} by ${updateTable.usernameWinnerOrBidder}`, {
                         position: "top-center",
                         autoClose: 2000,
                         hideProgressBar: false,

@@ -23,6 +23,33 @@ const StyledBox = styled(Box)({
     padding: '1rem',
 });
 
+const StyledForm = styled('form')({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+    maxWidth: '400px',
+    margin: '0 auto',
+});
+
+
+const StyledTextField = styled(TextField)({
+    '& .MuiInputLabel-root': {
+        color: 'gray',
+        fontWeight: 'bold',
+    },
+    '& .MuiInput-root': {
+        border: '2px solid lightgray',
+        borderRadius: '4px',
+        padding: '0.5rem',
+    },
+    '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button': {
+        WebkitAppearance: 'none',
+        margin: 0,
+    },
+});
+
+
+
 
 const StyledHeader = styled(Box)({
     display: 'flex',
@@ -86,57 +113,35 @@ const AddProductModal = (props) => {
                     <StyledHeader>
                         <h2>Add New Product</h2>
                         <StyledButton
-                            variant="contained"
+                            sx={{
+                                backgroundColor: 'gray',
+                                color: 'white',
+                            }}
                             onClick={handleClose}
                             icon={"x"}
                         />
 
 
                     </StyledHeader>
-                    <form onSubmit={onSubmit}>
-                        <TextField
-                            label="Name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            label="Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            label="Image Link"
-                            value={imageLink}
-                            onChange={(e) => setImageLink(e.target.value)}
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            label="Minimum Price"
-                            value={minPrice}
-                            onChange={handleMinPriceChange}
-                            type="number"
-
-                            InputProps={{
-                                inputProps: {
-                                    min: 1
-                                },
-                                endAdornment: <InputAdornment position="end">$</InputAdornment>,
-                            }
-                            }
-                            required
-                            fullWidth
+                    <StyledForm onSubmit={onSubmit}>
+                        <StyledTextField label="Name" value={name} onChange={(e) => setName(e.target.value)} required fullWidth />
+                        <StyledTextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} required fullWidth />
+                        <StyledTextField label="Image Link" value={imageLink} onChange={(e) => setImageLink(e.target.value)} required fullWidth />
+                        <StyledTextField label="Minimum Price" value={minPrice} onChange={handleMinPriceChange} type="number"
+                                         InputProps={{
+                                             inputProps: { min: 1 },
+                                             endAdornment: <InputAdornment position="end">$</InputAdornment>,
+                                         }}
+                                         required
+                                         fullWidth
                         />
 
                         <StyledButton
                             variant="contained"
                             sx={{
-                                margin: "10px"
-
+                                margin: "10px",
+                                backgroundColor: checkIfEmpty || checkMinPrice ? 'gray' : 'green',
+                                color: checkIfEmpty || checkMinPrice ? 'white' : 'black',
                             }}
                             text={"Save"}
                             icon={"v"}
@@ -158,7 +163,7 @@ const AddProductModal = (props) => {
                         </StyledButton>
 
 
-                    </form>
+                    </StyledForm>
                 </StyledBox>
             </StyledModal>
         </>

@@ -1,15 +1,33 @@
 import React from 'react';
 import {AppBar, Box, Button, List, Toolbar,Typography } from "@mui/material";
-import {NavLink, useNavigate, Link,useLocation} from "react-router-dom";
-import {getToken, logout} from "../services/userAtuhService";
+import {NavLink, useNavigate} from "react-router-dom";
+import {getCredits, getToken, logout} from "../services/userAtuhService";
 import LogoutIcon from '@mui/icons-material/Logout';
 import {buttonSX} from "./Styled/ConstantsStyle";
+import {useEffect, useState} from "react";
+import {Cookies} from "react-cookie";
+import config from "../config.json";
+
 
 
 
 const Header = (props) => {
-    const credit = props.credit;
+    const [myCredit, setMyCredit] = useState(0);
     const navigate = useNavigate();
+    const cookies = new Cookies();
+
+    useEffect(() => {
+        let token = cookies.get(config.tokenKey);
+        if (token !== undefined) {
+            const interval = setInterval(() => {
+                getCredits(token, setMyCredit);
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+
+    },[]);
+
+
     const handleLogout = () => {
         logout(navigate);
     }
@@ -48,7 +66,7 @@ const Header = (props) => {
                         </List>
 
                         <Typography component="span" sx={{flexGrow: 1, textAlign: "right", marginRight: 2, color: "white",verticalAlign:"middle",backgroundColor:"success.light", padding: 1}}>
-                                {"Credit:" + credit + "$"}
+                                {"Credit:" + myCredit + "$"}
                         </Typography>
 
                     </Toolbar>

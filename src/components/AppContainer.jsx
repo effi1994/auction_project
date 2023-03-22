@@ -3,7 +3,7 @@ import {Route, Routes, useLocation} from "react-router-dom";
 import Header from "./Header";
 import Login from "../pages/Login";
 import {Container} from "@mui/material";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {getCredits, getToken, user} from "../services/userAtuhService";
 import SignUP from "../pages/SignUP";
 import {ToastContainer} from 'react-toastify';
@@ -28,22 +28,10 @@ const linksAdmin = [
 ];
 
 const AppContainer = () => {
-
     let location = useLocation();
-    const [token, setToken] = useState(null);
-    const [credit, setCredit] = useState(0);
     const cookies = new Cookies();
-    useEffect( () => {
-        if (getToken()){
+    const [token, setToken] = React.useState(cookies.get(config.tokenKey));
 
-            const interval = setInterval(() => {
-                let token = getToken();
-                getCredits(token,setCredit);
-            }, 1000);
-            return () => clearInterval(interval);
-
-        }
-    },[])
 
     const handleToken = (token) => {
         setToken(token);
@@ -53,7 +41,7 @@ const AppContainer = () => {
             <ToastContainer/>
             {
                 getToken() &&
-                <Header path={location.pathname} token={token} credit={credit}
+                <Header path={location.pathname}
                         links={
                             cookies.get(config.tokenKeyAdmin) === 'true' ? linksAdmin : linksUser
                         }/>
