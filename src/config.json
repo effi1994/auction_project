@@ -1,5 +1,6 @@
 {
-  "apiUrl": "http://localhost:8989/",
+  "apiUrl": "http://ec2-34-216-220-241.us-west-2.compute.amazonaws.com:8989/",
   "tokenKey": "token",
   "tokenKeyAdmin": "tokenAdmin"
 }
+

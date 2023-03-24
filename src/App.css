@@ -36,3 +36,39 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Default styles for all devices */
+body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Styles for small devices (up to 576px wide) */
+@media (max-width: 576px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Styles for medium devices (576px to 768px wide) */
+@media (min-width: 576px) and (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Styles for large devices (768px to 992px wide) */
+@media (min-width: 768px) and (max-width: 992px) {
+  body {
+    font-size: 18px;
+  }
+}
+
+/* Styles for extra large devices (992px and above) */
+@media (min-width: 992px) {
+  body {
+    font-size: 20px;
+  }
+}
+

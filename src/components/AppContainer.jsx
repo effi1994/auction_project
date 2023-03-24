@@ -15,6 +15,7 @@ import UsersSystem from "../pages/UsersSystem";
 import UserDetails from "../pages/UserDetails";
 import {Cookies} from "react-cookie";
 import config from "../config.json";
+
 const linksUser = [
     {titlePage: "Home", path: "/"},
     {titlePage: "My Products", path: "/my-products"},
@@ -35,6 +36,8 @@ const AppContainer = () => {
     const handleToken = (token) => {
         setToken(token);
     }
+
+
     return (
         <>
             <ToastContainer/>
